@@ -1,0 +1,462 @@
+/* =================================================================
+   EDUVERSE — GAMIFICATION SYSTEM STYLESHEET
+   Builds on css/style.css (tokens, navbar, footer, buttons, reveal).
+   Sections in this file:
+   1. Page hero
+   2. Layout grid (profile card + level card)
+   3. Student Profile Card
+   4. Level Card
+   5. Badge gallery
+   6. Demo action buttons (+ ripple, shared with other pages)
+   7. Achievement popup layer
+   8. Level-up overlay
+   ================================================================= */
+
+/* -----------------------------------------------------------------
+   1. PAGE HERO
+   ----------------------------------------------------------------- */
+.gami-hero {
+  position: relative;
+  padding: 150px 0 70px;
+  overflow: hidden;
+  text-align: center;
+}
+.gami-hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--grad-hero);
+  background-size: 220% 220%;
+  animation: heroDrift 16s ease-in-out infinite;
+}
+.gami-hero__title { color: #fff; font-size: clamp(2rem, 4vw, 2.8rem); margin-bottom: 12px; }
+.gami-hero__sub { color: rgba(255,255,255,0.88); max-width: 640px; margin-inline: auto; font-size: 1.05rem; }
+
+/* -----------------------------------------------------------------
+   2. LAYOUT GRID
+   ----------------------------------------------------------------- */
+.gami-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 24px;
+  margin-top: -50px;
+  position: relative;
+  z-index: 2;
+  margin-bottom: 70px;
+}
+
+/* -----------------------------------------------------------------
+   3. STUDENT PROFILE CARD
+   Entire inner markup is rendered by js/gamification.js.
+   ----------------------------------------------------------------- */
+.profile-card {
+  background: var(--card-bg);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.profile-card__top {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.profile-card__avatar-wrap { position: relative; flex-shrink: 0; }
+.profile-card__avatar {
+  width: 84px; height: 84px;
+  border-radius: 50%;
+  background: var(--grad-primary);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.4rem;
+  box-shadow: var(--shadow-md);
+}
+.profile-card__level-chip {
+  position: absolute;
+  bottom: -4px;
+  inset-inline-end: -4px;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--orange);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.85rem;
+  display: flex; align-items: center; justify-content: center;
+  border: 3px solid var(--card-bg);
+}
+
+.profile-card__name { font-size: 1.3rem; }
+.profile-card__sub { color: var(--ink-soft); font-size: 0.88rem; }
+
+.profile-card__progress-label {
+  display: flex; justify-content: space-between;
+  font-size: 0.82rem; color: var(--ink-soft); margin-bottom: 6px; font-weight: 600;
+}
+.profile-card__bar { height: 10px; border-radius: 999px; background: var(--border-soft); overflow: hidden; }
+.profile-card__bar-fill {
+  display: block; height: 100%; border-radius: 999px;
+  background: var(--grad-primary);
+  transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.profile-card__stats {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-soft);
+}
+.profile-stat {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  text-align: center;
+}
+.profile-stat__icon { font-size: 1.3rem; margin-bottom: 2px; }
+.profile-stat strong { font-family: var(--font-display); font-size: 1.1rem; }
+.profile-stat span { color: var(--ink-soft); font-size: 0.72rem; }
+
+/* -----------------------------------------------------------------
+   4. LEVEL CARD
+   ----------------------------------------------------------------- */
+.level-card {
+  background: linear-gradient(135deg, #2A2350, #3B2E7A 55%, #1E3A6E);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 30px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  justify-content: center;
+}
+
+.level-card__current {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.level-card__badge {
+  width: 58px; height: 58px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.25);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.5rem;
+}
+.level-card__label { font-size: 0.85rem; color: rgba(255,255,255,0.75); }
+.level-card__needed { font-weight: 700; font-size: 0.95rem; }
+
+.level-card__bar { height: 12px; border-radius: 999px; background: rgba(255,255,255,0.18); overflow: hidden; }
+.level-card__bar-fill {
+  display: block; height: 100%; border-radius: 999px;
+  background: linear-gradient(90deg, var(--orange), var(--cyan));
+  transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.level-card__hint { font-size: 0.8rem; color: rgba(255,255,255,0.7); }
+
+.level-card .btn--secondary {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  border-color: rgba(255,255,255,0.3);
+}
+.level-card .btn--secondary:hover { background: rgba(255,255,255,0.2); }
+
+/* -----------------------------------------------------------------
+   5. BADGE GALLERY
+   ----------------------------------------------------------------- */
+.badge-section { padding: 20px 0 90px; }
+
+.badge-grid {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.badge-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-md);
+  padding: 22px 16px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.badge-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
+
+.badge-card__icon {
+  width: 62px; height: 62px;
+  margin-inline: auto 12px;
+  margin-bottom: 12px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.7rem;
+  background: var(--grad-primary);
+  color: #fff;
+  box-shadow: var(--shadow-sm);
+}
+.badge-card__name { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+.badge-card__desc { color: var(--ink-soft); font-size: 0.78rem; }
+
+.badge-card--locked { opacity: 0.55; }
+.badge-card--locked .badge-card__icon {
+  background: var(--border-soft);
+  color: var(--ink-soft);
+  filter: grayscale(0.4);
+}
+
+.badge-card--unlocked .badge-card__icon { animation: badgeShine 2.6s ease-in-out infinite; }
+@keyframes badgeShine {
+  0%, 100% { box-shadow: var(--shadow-sm); }
+  50% { box-shadow: 0 0 0 8px rgba(139,92,246,0.12), var(--shadow-md); }
+}
+
+/* Expandable placeholder card for teacher-added badges */
+.badge-card--add {
+  border: 2px dashed var(--border-soft);
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.badge-card--add:hover { border-color: var(--purple); transform: translateY(-6px); }
+.badge-card--add .badge-card__icon {
+  background: rgba(139, 92, 246, 0.1);
+  color: var(--purple);
+}
+
+/* -----------------------------------------------------------------
+   6. DEMO SECTION + RIPPLE (shared visual language with other pages)
+   ----------------------------------------------------------------- */
+.demo-section { padding: 20px 0 100px; background: var(--bg-soft); }
+
+.demo-grid {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.demo-btn {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-md);
+  padding: 22px 16px;
+  font-weight: 700;
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.demo-btn:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.demo-btn span:first-child { font-size: 1.7rem; }
+.demo-btn small { color: var(--ink-soft); font-weight: 600; font-size: 0.78rem; }
+
+.has-ripple { position: relative; overflow: hidden; }
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(58,123,255,0.25);
+  transform: scale(0);
+  animation: rippleGrow 0.6s ease-out forwards;
+  pointer-events: none;
+}
+@keyframes rippleGrow { to { transform: scale(2.6); opacity: 0; } }
+
+/* -----------------------------------------------------------------
+   7. ACHIEVEMENT POPUP LAYER
+   Small toast-style cards stacked top-inline-end; the engine queues
+   multiple achievements and shows them one after another.
+   ----------------------------------------------------------------- */
+.achv-popup-layer {
+  position: fixed;
+  top: 90px;
+  inset-inline-end: 24px;
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.achv-popup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-soft);
+  border-inline-start: 4px solid var(--purple);
+  border-radius: var(--r-sm);
+  padding: 12px 18px;
+  box-shadow: var(--shadow-lg);
+  min-width: 240px;
+  transform: translateX(120%);
+  opacity: 0;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s ease;
+}
+[dir="rtl"] .achv-popup { transform: translateX(-120%); }
+
+.achv-popup.is-visible { transform: translateX(0); opacity: 1; }
+
+.achv-popup__icon { font-size: 1.6rem; flex-shrink: 0; }
+.achv-popup__title { font-weight: 800; font-size: 0.92rem; }
+.achv-popup__detail { color: var(--ink-soft); font-size: 0.8rem; }
+
+/* -----------------------------------------------------------------
+   8. LEVEL-UP OVERLAY
+   ----------------------------------------------------------------- */
+.level-up-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(28, 27, 51, 0.55);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.level-up-overlay.is-active { opacity: 1; pointer-events: auto; }
+
+.level-up-card {
+  position: relative;
+  background: linear-gradient(135deg, #2A2350, #3B2E7A 55%, #1E3A6E);
+  color: #fff;
+  border-radius: var(--r-lg);
+  padding: 46px 40px;
+  text-align: center;
+  max-width: 360px;
+  box-shadow: var(--shadow-lg);
+  transform: scale(0.85);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.level-up-overlay.is-active .level-up-card { transform: scale(1); }
+
+.level-up-card__icon {
+  display: block;
+  font-size: 3rem;
+  margin-bottom: 10px;
+  animation: floaty 2s ease-in-out infinite;
+}
+.level-up-card h2 { color: #fff; font-size: 1.5rem; margin-bottom: 8px; }
+.level-up-card p { color: rgba(255,255,255,0.85); margin-bottom: 24px; }
+.level-up-card p strong { color: var(--orange); font-size: 1.2rem; }
+
+.level-up-card__confetti {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+.confetti-dot {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 8px; height: 8px;
+  border-radius: 2px;
+  background: var(--c, var(--orange));
+  animation: confettiBurst 1s ease-out forwards;
+}
+@keyframes confettiBurst {
+  from { transform: translate(-50%, -50%) rotate(0deg); opacity: 1; }
+  to { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) rotate(var(--rot)); opacity: 0; }
+}
+
+/* -----------------------------------------------------------------
+   9. RESPONSIVE
+   ----------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .gami-layout { grid-template-columns: 1fr; margin-top: -30px; }
+  .badge-grid { grid-template-columns: repeat(2, 1fr); }
+  .demo-grid { grid-template-columns: repeat(2, 1fr); }
+  .profile-card__stats { grid-template-columns: repeat(3, 1fr); row-gap: 16px; }
+}
+
+@media (max-width: 640px) {
+  .badge-grid { grid-template-columns: 1fr 1fr; }
+  .demo-grid { grid-template-columns: 1fr; }
+  .profile-card__stats { grid-template-columns: repeat(2, 1fr); }
+  .achv-popup-layer { inset-inline-end: 12px; inset-inline-start: 12px; top: 80px; }
+  .achv-popup { min-width: 0; }
+}
+
+/* -----------------------------------------------------------------
+   MY SUBJECTS — PROGRESS GRID
+   ----------------------------------------------------------------- */
+.subjects-progress-section, .certificates-section, .leaderboard-preview-section { padding: 40px 0; }
+
+.subjects-progress-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 16px;
+}
+.subject-progress-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-md);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.subject-progress-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+.subject-progress-card__icon { font-size: 1.8rem; flex-shrink: 0; }
+.subject-progress-card__body { flex: 1; min-width: 0; }
+.subject-progress-card__body strong { display: block; font-size: 0.92rem; margin-bottom: 6px; }
+.subject-progress-card__bar {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--bg-soft);
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+.subject-progress-card__bar span { display: block; height: 100%; background: var(--grad-primary); border-radius: 999px; }
+.subject-progress-card__pct { font-size: 0.76rem; color: var(--ink-soft); }
+
+/* -----------------------------------------------------------------
+   MY CERTIFICATES
+   ----------------------------------------------------------------- */
+.certificates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+.certificate-mini-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-md);
+  padding: 18px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.certificate-mini-card__icon { font-size: 1.8rem; margin-bottom: 4px; }
+.certificate-mini-card strong { font-size: 0.9rem; }
+.certificate-mini-card span { font-size: 0.78rem; color: var(--ink-soft); }
+.certificate-mini-card__date { font-weight: 700; color: var(--blue); }
+.certificates-empty { color: var(--ink-soft); font-size: 0.92rem; }
+
+/* -----------------------------------------------------------------
+   LEADERBOARD PREVIEW CARD
+   ----------------------------------------------------------------- */
+.leaderboard-preview-card {
+  background: var(--card-bg);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-sm);
+  padding: 18px;
+}

@@ -1,0 +1,540 @@
+/* =================================================================
+   EDUVERSE — LESSON 1 STYLESHEET
+   Builds on css/style.css (tokens) and css/lesson-engine.css (shell,
+   mission card, mission-complete overlay) — both reused unmodified.
+   This file only adds:
+   1. Illustration placeholder blocks
+   2. Engagement-type badges (Drag & Drop, Matching, Flip Cards, etc.)
+   3. Small per-type decorative touches (still placeholders — no logic)
+   ================================================================= */
+
+/* -----------------------------------------------------------------
+   1. ILLUSTRATION PLACEHOLDER
+   A distinct block type from the interactive/activity/challenge
+   blocks already styled in lesson-engine.css — represents where a
+   real diagram/photo from the source lesson will be inserted later.
+   ----------------------------------------------------------------- */
+.illustration-placeholder {
+  border: 2px dashed var(--border-soft);
+  border-radius: var(--r-md);
+  background: linear-gradient(135deg, rgba(58,123,255,0.05), rgba(139,92,246,0.05));
+  padding: 28px 20px;
+  text-align: center;
+  margin-bottom: 18px;
+}
+.illustration-placeholder__icon {
+  font-size: 2.2rem;
+  display: block;
+  margin-bottom: 10px;
+  opacity: 0.8;
+}
+.illustration-placeholder__caption {
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+  max-width: 480px;
+  margin-inline: auto;
+}
+
+/* -----------------------------------------------------------------
+   2. ENGAGEMENT-TYPE BADGE
+   Shown at the top of an activity/challenge block to indicate which
+   future interactive mechanic will occupy that placeholder. Purely
+   a label — no drag/drop, matching, etc. logic is implemented here.
+   ----------------------------------------------------------------- */
+.engagement-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+  background: var(--e-bg, rgba(58,123,255,0.1));
+  color: var(--e-fg, var(--blue));
+}
+
+/* Per-engagement-type accent colors — cosmetic only, cycling through
+   the platform's existing palette so each mechanic reads distinctly. */
+.engagement-badge--drag-drop     { --e-bg: rgba(58,123,255,0.1);  --e-fg: var(--blue); }
+.engagement-badge--matching      { --e-bg: rgba(139,92,246,0.1);  --e-fg: var(--purple); }
+.engagement-badge--click-discover{ --e-bg: rgba(34,211,238,0.12); --e-fg: #0E93A8; }
+.engagement-badge--flip-cards    { --e-bg: rgba(255,159,69,0.12); --e-fg: #C97A2E; }
+.engagement-badge--hotspots      { --e-bg: rgba(139,92,246,0.1);  --e-fg: var(--purple); }
+.engagement-badge--mini-challenge{ --e-bg: rgba(255,159,69,0.12); --e-fg: #C97A2E; }
+.engagement-badge--timeline      { --e-bg: rgba(58,123,255,0.1);  --e-fg: var(--blue); }
+.engagement-badge--puzzle        { --e-bg: rgba(34,211,238,0.12); --e-fg: #0E93A8; }
+
+/* -----------------------------------------------------------------
+   3. LIGHT DECORATIVE TOUCHES PER ENGAGEMENT TYPE
+   Small, static visual hints only (no interactivity/logic yet).
+   ----------------------------------------------------------------- */
+
+/* Flip Cards: a faint "front/back" card stack hint */
+.placeholder-box--flip-cards {
+  position: relative;
+  background: repeating-linear-gradient(
+    135deg,
+    var(--bg-soft),
+    var(--bg-soft) 10px,
+    rgba(255,159,69,0.06) 10px,
+    rgba(255,159,69,0.06) 20px
+  );
+}
+
+/* Drag & Drop: dashed "drop target" corners */
+.placeholder-box--drag-drop {
+  border-style: dashed;
+  border-color: rgba(58,123,255,0.35);
+}
+
+/* Hotspots: a few faint pulsing dots scattered in the box */
+.placeholder-box--hotspots { position: relative; overflow: hidden; }
+.hotspot-dot {
+  position: absolute;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--purple);
+  opacity: 0.5;
+  animation: hotspotPulse 2.4s ease-in-out infinite;
+}
+@keyframes hotspotPulse {
+  0%, 100% { transform: scale(1); opacity: 0.35; }
+  50% { transform: scale(1.4); opacity: 0.8; }
+}
+
+/* Interactive Timeline: a simple horizontal guide line */
+.placeholder-box--timeline {
+  background-image: linear-gradient(90deg, transparent 6%, var(--border-soft) 6% 94%, transparent 94%);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 2px;
+}
+
+/* Puzzle: a faint grid hinting at interlocking pieces */
+.placeholder-box--puzzle {
+  background-image:
+    linear-gradient(90deg, var(--border-soft) 1px, transparent 1px),
+    linear-gradient(0deg, var(--border-soft) 1px, transparent 1px);
+  background-size: 34px 34px;
+  background-position: center;
+}
+
+/* Matching: two faint columns hinting at pairs to connect */
+.placeholder-box--matching {
+  background-image: linear-gradient(90deg, transparent 49%, var(--border-soft) 49% 51%, transparent 51%);
+}
+
+/* Mini Challenge: a small trophy-tinted left border for emphasis */
+.placeholder-box--mini-challenge {
+  border-inline-start: 4px solid rgba(255,159,69,0.5);
+  text-align: start;
+}
+
+/* Click to Discover: faint dotted underline hint on the placeholder text */
+.placeholder-box--click-discover { border-style: dotted; }
+
+/* Real lesson text inside a placeholder box reads left-aligned and
+   slightly larger than the generic "coming soon" placeholder copy,
+   since it is actual source content rather than a filler sentence. */
+.placeholder-box--content {
+  text-align: start;
+  color: var(--ink);
+  font-size: 0.94rem;
+  line-height: 1.8;
+}
+.placeholder-box--content strong { color: var(--blue); }
+
+/* =================================================================
+   PHASE 2 ADDITIONS — video embed, quiz, drag & drop, Atom Lab
+   All reuse existing tokens from css/style.css (colors, radii,
+   shadows) — no new tokens defined here.
+   ================================================================= */
+
+/* -----------------------------------------------------------------
+   4. VIDEO EMBED
+   ----------------------------------------------------------------- */
+.video-block { padding-bottom: 20px; }
+.video-embed {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 */
+  border-radius: var(--r-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  background: #000;
+}
+.video-embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.video-caption {
+  margin-top: 10px;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  text-align: center;
+}
+
+/* -----------------------------------------------------------------
+   5. QUIZ — instant feedback
+   ----------------------------------------------------------------- */
+.quiz-block { background: var(--bg-soft); border-radius: var(--r-md); padding: 20px; }
+.quiz-question { font-weight: 700; color: var(--ink); margin-bottom: 14px; }
+
+.quiz-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  align-items: stretch;
+}
+.quiz-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: #fff;
+  border: 2px solid var(--border-soft);
+  border-radius: var(--r-sm);
+  text-align: start;
+  font-size: 0.9rem;
+  color: var(--ink);
+  /* Fixed box model: width comes from the grid column, height is set
+     explicitly, and box-sizing (global, border-box) keeps the border
+     from ever changing the rendered size. Only box-shadow/border-color
+     are animated below — neither affects layout or element size. */
+  width: 100%;
+  height: 100%;
+  min-height: 64px;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.quiz-option:hover:not(:disabled) { border-color: var(--blue); box-shadow: var(--shadow-sm); }
+.quiz-option:disabled { cursor: default; }
+
+.quiz-option__letter {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--bg-soft);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  flex-shrink: 0;
+}
+
+/* Reserved icon slot: always present at a fixed size (even when
+   empty) so adding the ✅/❌ icon never shifts or resizes the card. */
+.quiz-option__icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  line-height: 1;
+  margin-inline-start: auto;
+}
+
+.quiz-option.is-correct {
+  border-color: #16A34A;
+  background: rgba(34,197,94,0.08);
+  box-shadow: 0 0 0 4px rgba(34,197,94,0.14), 0 0 16px rgba(34,197,94,0.35);
+  animation: quizPop 0.3s ease;
+}
+.quiz-option.is-correct .quiz-option__letter { background: #16A34A; color: #fff; }
+.quiz-option.is-wrong {
+  border-color: #DC2626;
+  background: rgba(220,38,38,0.06);
+  box-shadow: 0 0 0 4px rgba(220,38,38,0.12), 0 0 16px rgba(220,38,38,0.28);
+  animation: quizPop 0.3s ease;
+}
+.quiz-option.is-wrong .quiz-option__letter { background: #DC2626; color: #fff; }
+
+/* Card never changes size — only a soft glow pulse (box-shadow) and
+   the border-color change. No transform/scale, so there's zero risk
+   of layout shift or the option appearing to "grow" after a click. */
+@keyframes quizPop {
+  0% { box-shadow: 0 0 0 0 rgba(0,0,0,0); }
+  50% { box-shadow: 0 0 0 6px rgba(0,0,0,0.06), 0 0 22px rgba(0,0,0,0.18); }
+  100% { box-shadow: 0 0 0 4px rgba(0,0,0,0.1), 0 0 16px rgba(0,0,0,0.3); }
+}
+/* A real left-right "shake" (position only, via translateX) — this
+   moves the element, it never resizes it, so it can't cause layout
+   shift or leave the chip looking permanently bigger/smaller. */
+@keyframes quizShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.quiz-feedback {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: var(--r-sm);
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+.quiz-feedback.is-correct { background: rgba(34,197,94,0.1); color: #15803D; }
+.quiz-feedback.is-wrong { background: rgba(220,38,38,0.08); color: #B91C1C; }
+
+/* -----------------------------------------------------------------
+   6. DRAG & DROP (Pointer Events)
+   ----------------------------------------------------------------- */
+.dragdrop-block { background: var(--bg-soft); border-radius: var(--r-md); padding: 20px; }
+.dragdrop-instructions { color: var(--ink-soft); font-size: 0.88rem; margin-bottom: 16px; }
+
+.dragdrop-area {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.dragdrop-tray {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.dragdrop-chip {
+  padding: 12px 16px;
+  background: var(--grad-primary);
+  color: #fff;
+  border-radius: var(--r-sm);
+  font-weight: 700;
+  font-size: 0.88rem;
+  text-align: center;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s ease;
+}
+.dragdrop-chip:active { cursor: grabbing; }
+.dragdrop-chip.is-dragging { box-shadow: var(--shadow-lg); opacity: 0.92; }
+.dragdrop-chip.is-placed { pointer-events: none; }
+.dragdrop-chip.is-shake { animation: quizShake 0.35s ease; }
+
+.dragdrop-zones {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.dragdrop-zone {
+  position: relative;
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 2px dashed var(--border-soft);
+  border-radius: var(--r-sm);
+  background: #fff;
+  font-weight: 800;
+  color: var(--ink-soft);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.dragdrop-zone__symbol { font-size: 1rem; }
+.dragdrop-zone__label {
+  font-size: 0.82rem;
+  color: #15803D;
+  font-weight: 700;
+}
+.dragdrop-zone.is-filled {
+  border-style: solid;
+  border-color: #16A34A;
+  background: rgba(34,197,94,0.08);
+}
+.dragdrop-zone.is-correct-flash { animation: quizPop 0.3s ease; }
+
+@media (max-width: 640px) {
+  .dragdrop-area { grid-template-columns: 1fr; }
+  .quiz-options { grid-template-columns: 1fr; }
+}
+
+/* -----------------------------------------------------------------
+   7. ATOM LAB — "Build an Atom" virtual lab
+   ----------------------------------------------------------------- */
+.atom-lab {
+  --w1: var(--blue);
+  --w2: var(--cyan);
+  background: linear-gradient(135deg, rgba(58,123,255,0.05), rgba(34,211,238,0.05));
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-lg);
+  padding: 22px;
+  margin-bottom: 18px;
+}
+.atom-lab__header h3 { margin-bottom: 4px; }
+.atom-lab__header p { color: var(--ink-soft); font-size: 0.86rem; margin-bottom: 16px; }
+
+.atom-lab__body {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 24px;
+  align-items: center;
+}
+
+.atom-lab__visual {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--navy) 0%, #1a2a52 100%);
+  overflow: visible;
+}
+.atom-lab__rings {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.atom-lab__ring {
+  position: absolute;
+  border: 1.5px dashed rgba(255,255,255,0.35);
+  border-radius: 50%;
+  animation: labRingSpin 12s linear infinite;
+}
+.atom-lab__ring:nth-child(2) { animation-duration: 18s; animation-direction: reverse; }
+.atom-lab__ring:nth-child(3) { animation-duration: 24s; }
+.atom-lab__ring:nth-child(4) { animation-duration: 30s; animation-direction: reverse; }
+@keyframes labRingSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+.atom-lab__electron {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 9px; height: 9px;
+  margin: -4.5px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 8px 2px rgba(34,211,238,0.7);
+}
+
+.atom-lab__nucleus {
+  position: absolute;
+  inset: 0;
+}
+.atom-lab__particle {
+  position: absolute;
+  width: 10px; height: 10px;
+  margin: -5px;
+  border-radius: 50%;
+  box-shadow: 0 0 4px rgba(0,0,0,0.3);
+}
+.atom-lab__particle--proton { background: #FF6B6B; }
+.atom-lab__particle--neutron { background: #D1D5DB; }
+
+.atom-lab__panel { display: flex; flex-direction: column; gap: 18px; }
+
+.atom-lab__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.atom-lab__control {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: #fff;
+  border-radius: var(--r-sm);
+  padding: 10px 14px;
+  box-shadow: var(--shadow-sm);
+}
+.atom-lab__control-label { font-size: 0.78rem; font-weight: 700; color: var(--ink-soft); }
+.atom-lab__stepper { display: flex; align-items: center; gap: 10px; }
+.atom-lab__stepper strong { min-width: 20px; text-align: center; font-family: var(--font-display); }
+.atom-lab__step-btn {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--grad-primary);
+  color: #fff;
+  font-weight: 800;
+  font-size: 1rem;
+  line-height: 1;
+  position: relative;
+  overflow: hidden;
+}
+.atom-lab__step-btn:hover { filter: brightness(1.08); }
+
+.atom-lab__stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.atom-lab__stat {
+  background: #fff;
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.atom-lab__stat span { font-size: 0.72rem; color: var(--ink-soft); font-weight: 700; }
+.atom-lab__stat strong { font-family: var(--font-display); color: var(--ink); }
+.atom-lab__stat--element { grid-column: span 2; background: var(--grad-primary); }
+.atom-lab__stat--element span, .atom-lab__stat--element strong { color: #fff; }
+
+@media (max-width: 720px) {
+  .atom-lab__body { grid-template-columns: 1fr; }
+  .atom-lab__visual { max-width: 220px; margin-inline: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atom-lab__ring { animation: none; }
+}
+
+/* ===================================================================
+   RESUME-CHOICE PROMPT ("كيف تريد البدء؟")
+   Shown once at page load, only when the student has real saved
+   progress beyond Mission 1. Deliberately reuses the same overlay/card
+   visual language as .level-up-overlay (gamification.css) so it
+   doesn't look like a foreign component, without touching that file.
+   =================================================================== */
+.resume-choice-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 950;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(28, 27, 51, 0.55);
+  animation: resumeChoiceFadeIn 0.25s ease;
+}
+@keyframes resumeChoiceFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.resume-choice-card {
+  width: 100%;
+  max-width: 380px;
+  background: #fff;
+  border-radius: var(--r-lg);
+  padding: 28px 26px;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+}
+.resume-choice-card__title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.resume-choice-card__hint {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  margin-bottom: 20px;
+}
+.resume-choice-card__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.resume-choice-card__actions .btn { width: 100%; justify-content: center; }
+
+@media (prefers-reduced-motion: reduce) {
+  .resume-choice-overlay { animation: none; }
+}

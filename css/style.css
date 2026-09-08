@@ -1,0 +1,955 @@
+/* =================================================================
+   EDUVERSE — HOME PAGE STYLESHEET
+   Organized top-to-bottom: Reset > Tokens > Base > Layout >
+   Components > Sections > Animations > Responsive
+   ================================================================= */
+
+/* -----------------------------------------------------------------
+   1. RESET
+   ----------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+img, svg { display: block; max-width: 100%; }
+a { text-decoration: none; color: inherit; }
+button { font: inherit; cursor: pointer; border: none; background: none; }
+ul, ol { list-style: none; }
+
+/* Mobile tap behavior (not a visual redesign): removes the browser's
+   own default tap-highlight overlay — which some mobile browsers
+   render as a flash/box that can look like an unwanted size or color
+   change — and removes the ~300ms double-tap-to-zoom delay on
+   interactive elements. Neither changes any color, layout, or
+   content; all real visual feedback still comes entirely from this
+   project's own :hover/:active rules (background/border/shadow, no
+   scale()).
+
+   ROOT CAUSE FIX for "icon/button visually enlarges when tapped":
+   there was never any transform:scale() on any interactive element —
+   a full search of every .css file confirms the only scale() rules
+   in the project belong to unrelated animations (ripples, popups,
+   badge reveals) that don't touch buttons/icons. The real cause is
+   the mobile browser's OWN native double-tap-to-zoom gesture: this
+   rule used to be scoped to `a, button, [role="button"], input,
+   select, textarea` only, but many of the app's actual tap targets
+   are NOT semantic buttons — e.g. the whole `<article class=
+   "world-card">` on learning-worlds.html and `.unit-card` on
+   units.html are tapped via a delegated click listener on a parent
+   container (see js/learning-worlds.js "BUGFIX" comment), and their
+   inner icon/art elements are plain <span>/<div>s. None of those
+   were covered by the old selector, so a tap landing on the icon/art
+   (not the literal <button>) still triggered the browser's native
+   zoom, which looks exactly like the button/icon "growing". Applying
+   this to every element removes that native zoom everywhere, for any
+   current or future tap target, without touching any transform,
+   color, layout, or content. */
+* {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* -----------------------------------------------------------------
+   2. DESIGN TOKENS
+   Official palette, inspired by the EduVerse logo: Primary Blue,
+   Cyan, Orange, Purple, White, and Dark Navy.
+   ----------------------------------------------------------------- */
+:root {
+  /* Brand colors */
+  --blue: #3A7BFF;
+  --purple: #8B5CF6;
+  --cyan: #22D3EE;
+  --orange: #FF9F45;
+  --white: #FFFFFF;
+  --navy: #0F1B3D; /* Dark Navy — from the logo's night-sky background */
+
+  /* Neutrals — tinted toward the brand instead of flat gray/black */
+  --ink: #1C1B33;          /* primary text */
+  --ink-soft: #514E6E;     /* secondary text */
+  --bg-soft: #F5F7FF;      /* page background, soft lavender-blue */
+  --card-bg: #FFFFFF;
+  --border-soft: #E4E7FA;
+
+  /* Gradients */
+  --grad-hero: linear-gradient(120deg, #2F5DFF 0%, #7C3AED 50%, #16C7E8 100%);
+  --grad-primary: linear-gradient(120deg, var(--blue), var(--purple));
+  --grad-warm: linear-gradient(120deg, var(--orange), #FF6F91);
+
+  /* Radius & shadow */
+  --r-sm: 12px;
+  --r-md: 20px;
+  --r-lg: 28px;
+  --shadow-sm: 0 4px 14px rgba(28, 27, 51, 0.06);
+  --shadow-md: 0 14px 34px rgba(58, 45, 130, 0.12);
+  --shadow-lg: 0 24px 60px rgba(58, 45, 130, 0.18);
+
+  /* Type */
+  --font-display: 'Cairo', 'Tajawal', sans-serif;
+  --font-body: 'Tajawal', 'Cairo', sans-serif;
+
+  /* Layout */
+  --container-w: 1180px;
+  --nav-h: 76px;
+}
+
+/* -----------------------------------------------------------------
+   3. BASE
+   ----------------------------------------------------------------- */
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--bg-soft);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container-w);
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--purple);
+  background: rgba(139, 92, 246, 0.1);
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 18px;
+}
+.eyebrow--light { color: #fff; background: rgba(255,255,255,0.16); }
+
+.section-title { font-size: clamp(1.8rem, 3vw, 2.5rem); margin-bottom: 10px; }
+.section-title--light { color: #fff; }
+.section-subtitle { color: var(--ink-soft); font-size: 1.05rem; max-width: 560px; }
+.section-subtitle--light { color: rgba(255,255,255,0.82); }
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+  margin-bottom: 36px;
+  flex-wrap: wrap;
+}
+
+.link-arrow { color: var(--blue); font-weight: 700; white-space: nowrap; }
+.link-arrow:hover { text-decoration: underline; }
+
+section { padding: 88px 0; }
+
+/* -----------------------------------------------------------------
+   4. BUTTONS (reusable component)
+   ----------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 700;
+  border-radius: 999px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+  white-space: nowrap;
+}
+.btn--sm { padding: 10px 18px; font-size: 0.9rem; }
+.btn--lg { padding: 16px 32px; font-size: 1.05rem; }
+
+.btn--primary {
+  background: var(--grad-primary);
+  color: #fff;
+  box-shadow: var(--shadow-md);
+}
+.btn--primary:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+
+.btn--secondary {
+  background: #fff;
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+  border: 2px solid var(--border-soft);
+}
+.btn--secondary:hover { transform: translateY(-3px); border-color: var(--purple); }
+
+.btn--ghost {
+  color: var(--ink);
+  border: 2px solid var(--border-soft);
+}
+.btn--ghost:hover { background: rgba(58, 123, 255, 0.08); }
+
+/* -----------------------------------------------------------------
+   5. NAVBAR
+   ----------------------------------------------------------------- */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: var(--nav-h);
+  display: flex;
+  align-items: center;
+  background: rgba(245, 247, 255, 0.78);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.navbar__brand { display: flex; align-items: center; gap: 10px; }
+.navbar__title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.3rem;
+  letter-spacing: 0.3px;
+}
+.navbar__title--footer { color: #fff; }
+
+.navbar__links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+.navbar__link {
+  font-weight: 600;
+  color: var(--ink-soft);
+  font-size: 0.96rem;
+  position: relative;
+  padding: 6px 2px;
+}
+.navbar__link:hover { color: var(--ink); }
+.navbar__link.is-active { color: var(--blue); }
+.navbar__link.is-active::after {
+  content: "";
+  position: absolute;
+  bottom: -2px; left: 0; right: 0;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--grad-primary);
+}
+
+.navbar__actions { display: flex; align-items: center; gap: 10px; }
+
+.navbar__toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  padding: 8px;
+}
+.navbar__toggle span {
+  width: 24px; height: 2.5px; border-radius: 2px;
+  background: var(--ink);
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+.navbar__toggle.is-open span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+.navbar__toggle.is-open span:nth-child(2) { opacity: 0; }
+.navbar__toggle.is-open span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+
+/* -----------------------------------------------------------------
+   5b. OFFICIAL LOGO MARK + BRAND LOCKUP + PAGE LOADER
+   Shared across every page. The circular icon crop (navbar/footer/
+   sidebar/favicon) and the full lockup (hero/login/about/loading)
+   both come from the one official EduVerse logo file.
+   ----------------------------------------------------------------- */
+
+/* Small circular mark — replaces the old inline-SVG placeholder that
+   every navbar/footer/dashboard brand used before this phase. */
+.navbar__logo-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* Full logo lockup, presented on a white card so it reads cleanly on
+   top of any colored/gradient background (hero, login, loader). */
+.brand-lockup {
+  display: inline-flex;
+  padding: 12px;
+  background: #fff;
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  line-height: 0;
+}
+.brand-lockup img {
+  display: block;
+  border-radius: var(--r-md);
+}
+.brand-lockup--sm { padding: 6px; border-radius: var(--r-sm); box-shadow: var(--shadow-sm); }
+.brand-lockup--sm img { border-radius: var(--r-sm); }
+
+/* Page loader: brief branded splash shown while a page's fonts/assets
+   settle, then fades itself out — pure CSS, no JS dependency, so it
+   can never get stuck if a script fails to load. */
+.page-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--navy);
+  animation: pageLoaderFade 0.5s ease forwards;
+  animation-delay: 0.5s;
+}
+.page-loader__logo {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 0 6px rgba(255,255,255,0.08), 0 20px 50px rgba(0,0,0,0.4);
+  animation: floaty 1.1s ease-in-out infinite;
+}
+@keyframes pageLoaderFade {
+  to { opacity: 0; visibility: hidden; pointer-events: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-loader { animation-delay: 0.01s; animation-duration: 0.01s; }
+  .page-loader__logo { animation: none; }
+}
+
+/* -----------------------------------------------------------------
+   6. HERO — animated gradient + "Orbit Portal" signature element
+   ----------------------------------------------------------------- */
+.hero {
+  position: relative;
+  padding-top: 72px;
+  padding-bottom: 0;
+  overflow: hidden;
+}
+
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  background: var(--grad-hero);
+  background-size: 220% 220%;
+  animation: heroDrift 16s ease-in-out infinite;
+  z-index: -2;
+}
+
+.hero__stars {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+/* individual star dots are injected by JS as .star elements */
+
+@keyframes heroDrift {
+  0%   { background-position: 0% 30%; }
+  50%  { background-position: 100% 70%; }
+  100% { background-position: 0% 30%; }
+}
+
+.hero__grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: 40px;
+  padding-block: 64px 120px;
+  position: relative;
+}
+
+.hero__copy { color: #fff; }
+.hero__title {
+  font-size: clamp(2.2rem, 4.2vw, 3.4rem);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.hero__brand-chip {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.35);
+  padding: 6px 16px;
+  border-radius: 999px;
+  width: fit-content;
+  letter-spacing: 1px;
+}
+.hero__tagline {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #E9EEFF;
+  margin-bottom: 14px;
+}
+.hero__sub {
+  color: rgba(255,255,255,0.85);
+  max-width: 520px;
+  margin-bottom: 32px;
+  font-size: 1.02rem;
+}
+.hero__cta { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 44px; }
+
+.hero__stats { display: flex; gap: 36px; flex-wrap: wrap; }
+.hero__stat { display: flex; flex-direction: column; }
+.hero__stat strong { font-family: var(--font-display); font-size: 1.6rem; color: #fff; }
+.hero__stat span { font-size: 0.85rem; color: rgba(255,255,255,0.75); }
+
+/* --- Orbit Portal --- */
+.orbit {
+  position: relative;
+  height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.orbit__portal {
+  position: relative;
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 35% 30%, #ffffff 0%, #DCE6FF 35%, #ffffff 100%);
+  box-shadow: 0 0 0 10px rgba(255,255,255,0.14), 0 20px 60px rgba(0,0,0,0.25);
+  z-index: 3;
+}
+.orbit__portal-core {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1rem;
+  text-align: center;
+  line-height: 1.15;
+  color: var(--purple);
+}
+.orbit__portal-glow {
+  position: absolute;
+  inset: -22px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.35), transparent 70%);
+  animation: pulseGlow 3.2s ease-in-out infinite;
+}
+@keyframes pulseGlow {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.12); opacity: 1; }
+}
+
+.orbit__ring {
+  position: absolute;
+  border: 1.5px dashed rgba(255,255,255,0.35);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.orbit__ring--1 { width: 220px; height: 220px; animation: spin 18s linear infinite; }
+.orbit__ring--2 { width: 320px; height: 320px; animation: spin 26s linear infinite reverse; }
+.orbit__ring--3 { width: 400px; height: 400px; animation: spin 34s linear infinite; }
+
+.orbit__chip {
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.2), inset 0 0 0 3px var(--c, var(--blue));
+  animation: counterSpin inherit;
+}
+/* place chips around each ring using nth-child offsets */
+.orbit__ring--1 .orbit__chip:nth-child(1) { top: -23px; left: 50%; transform: translateX(-50%); }
+.orbit__ring--1 .orbit__chip:nth-child(2) { bottom: -23px; left: 50%; transform: translateX(-50%); }
+.orbit__ring--2 .orbit__chip:nth-child(1) { top: 8%; left: -8px; }
+.orbit__ring--2 .orbit__chip:nth-child(2) { bottom: 6%; right: 10%; }
+.orbit__ring--2 .orbit__chip:nth-child(3) { top: 6%; right: 6%; }
+.orbit__ring--3 .orbit__chip:nth-child(1) { top: 50%; left: -23px; transform: translateY(-50%); }
+.orbit__ring--3 .orbit__chip:nth-child(2) { top: 50%; right: -23px; transform: translateY(-50%); }
+
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* counter-rotate chips so icons stay upright while ring spins */
+.orbit__ring--1 { animation-name: spin; }
+.orbit__ring--1 .orbit__chip { animation: counterSpin1 18s linear infinite; }
+.orbit__ring--2 .orbit__chip { animation: counterSpin2 26s linear infinite; }
+.orbit__ring--3 .orbit__chip { animation: counterSpin3 34s linear infinite; }
+@keyframes counterSpin1 { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+@keyframes counterSpin2 { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+@keyframes counterSpin3 { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+/* note: transform origin handled by wrapping position; translate offsets above are re-applied via animation-fill-mode */
+.orbit__ring--1 .orbit__chip:nth-child(1),
+.orbit__ring--1 .orbit__chip:nth-child(2),
+.orbit__ring--2 .orbit__chip:nth-child(1),
+.orbit__ring--2 .orbit__chip:nth-child(2),
+.orbit__ring--2 .orbit__chip:nth-child(3),
+.orbit__ring--3 .orbit__chip:nth-child(1),
+.orbit__ring--3 .orbit__chip:nth-child(2) {
+  animation-fill-mode: both;
+}
+
+.hero__wave { display: block; width: 100%; height: 70px; position: relative; }
+
+/* -----------------------------------------------------------------
+   6b. STATISTICS BAND
+   ----------------------------------------------------------------- */
+.stats {
+  padding: 56px 0;
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border-soft);
+}
+.stats__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  text-align: center;
+}
+.stat-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.stat-block__icon { font-size: 1.6rem; margin-bottom: 4px; }
+.stat-block__num {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  background: var(--grad-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.stat-block__label { color: var(--ink-soft); font-size: 0.92rem; font-weight: 600; }
+
+/* -----------------------------------------------------------------
+   7. FEATURE CARDS
+   ----------------------------------------------------------------- */
+.features { background: var(--bg-soft); }
+
+.features__grid {
+  margin-top: 44px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.feature-card {
+  background: var(--card-bg);
+  border-radius: var(--r-md);
+  padding: 30px 24px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-soft);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.feature-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-md); }
+
+.feature-card__icon {
+  width: 56px; height: 56px;
+  border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 18px;
+  background: linear-gradient(135deg, var(--c1), var(--c2));
+  box-shadow: var(--shadow-sm);
+}
+
+.feature-card h3 { font-size: 1.08rem; margin-bottom: 8px; }
+.feature-card p { color: var(--ink-soft); font-size: 0.95rem; }
+
+/* -----------------------------------------------------------------
+   7b. PLATFORM FEATURES — horizontal icon-left cards
+   (deliberately different shape from .feature-card above, so this
+   section reads as "what the platform includes" rather than
+   repeating the "why EduVerse" benefit cards)
+   ----------------------------------------------------------------- */
+.platform { background: var(--bg-soft); }
+
+.platform__grid {
+  margin-top: 44px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.platform-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-soft);
+  border-inline-start: 4px solid var(--c, var(--blue));
+  border-radius: var(--r-sm);
+  padding: 22px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.platform-item:hover { transform: translateX(-4px); box-shadow: var(--shadow-sm); }
+
+.platform-item__icon {
+  flex-shrink: 0;
+  width: 46px; height: 46px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem;
+  background: color-mix(in srgb, var(--c, var(--blue)) 14%, white);
+}
+
+.platform-item h3 { font-size: 1rem; margin-bottom: 6px; }
+.platform-item p { color: var(--ink-soft); font-size: 0.9rem; }
+
+/* -----------------------------------------------------------------
+   8. SUBJECTS PREVIEW (cards rendered by JS)
+   ----------------------------------------------------------------- */
+.subject-track {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+}
+
+.subject-card {
+  background: var(--card-bg);
+  border-radius: var(--r-md);
+  padding: 24px;
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.subject-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
+
+.subject-card__top { display: flex; align-items: center; gap: 12px; }
+.subject-card__icon {
+  width: 48px; height: 48px;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+  background: linear-gradient(135deg, var(--c1), var(--c2));
+}
+.subject-card__name { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; }
+.subject-card__meta { font-size: 0.82rem; color: var(--ink-soft); }
+
+.subject-card__progress-label {
+  display: flex; justify-content: space-between;
+  font-size: 0.82rem; color: var(--ink-soft); margin-bottom: 4px;
+}
+.subject-card__bar { height: 8px; border-radius: 6px; background: var(--border-soft); overflow: hidden; }
+.subject-card__bar-fill { display: block; height: 100%; border-radius: 6px; background: var(--grad-primary); }
+
+.subject-card__start {
+  margin-top: auto;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.92rem;
+  padding: 10px;
+  border-radius: 999px;
+  background: rgba(58, 123, 255, 0.08);
+  color: var(--blue);
+}
+.subject-card:hover .subject-card__start { background: var(--grad-primary); color: #fff; }
+
+/* -----------------------------------------------------------------
+   9. GAMIFICATION TEASER
+   ----------------------------------------------------------------- */
+.gami {
+  background: linear-gradient(135deg, #2A2350, #3B2E7A 55%, #1E3A6E);
+  color: #fff;
+}
+.gami__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: center;
+}
+
+.gami__badges { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
+.gami__badge {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.16);
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+}
+.gami__badge b { color: var(--c, #fff); }
+
+.gami__panel {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: var(--r-lg);
+  padding: 30px;
+  backdrop-filter: blur(6px);
+}
+.gami__row { display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 10px; font-size: 0.95rem; }
+
+.xp-bar { height: 14px; border-radius: 999px; background: rgba(255,255,255,0.14); overflow: hidden; margin-bottom: 28px; }
+.xp-bar__fill {
+  display: block; height: 100%; border-radius: 999px;
+  background: linear-gradient(90deg, var(--orange), var(--cyan));
+  animation: fillIn 1.4s ease forwards;
+}
+@keyframes fillIn { from { width: 0; } }
+
+.gami__chest {
+  display: flex; align-items: center; gap: 14px;
+  background: linear-gradient(135deg, rgba(255,159,69,0.18), rgba(139,92,246,0.18));
+  border: 1px dashed rgba(255,255,255,0.35);
+  border-radius: var(--r-md);
+  padding: 16px 18px;
+  cursor: pointer;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.gami__chest:hover, .gami__chest:focus-visible {
+  border-color: rgba(255,159,69,0.7);
+  box-shadow: 0 0 0 4px rgba(255,159,69,0.16), 0 0 20px rgba(255,159,69,0.3);
+}
+.gami__chest.is-pressed {
+  border-color: rgba(255,159,69,0.9);
+  box-shadow: 0 0 0 5px rgba(255,159,69,0.22), 0 0 26px rgba(255,159,69,0.4);
+}
+.gami__chest-icon { font-size: 1.8rem; animation: floaty 2.6s ease-in-out infinite; }
+.gami__chest-label { font-weight: 700; }
+
+/* -----------------------------------------------------------------
+   10. LOGIN CARDS
+   ----------------------------------------------------------------- */
+.login-cards {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 26px;
+}
+
+.login-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 34px;
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-soft);
+  background: var(--card-bg);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.login-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+.login-card::before {
+  content: "";
+  position: absolute; inset: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 0;
+}
+.login-card--student::before { background: linear-gradient(135deg, rgba(58,123,255,0.08), rgba(34,211,238,0.08)); }
+.login-card--teacher::before { background: linear-gradient(135deg, rgba(139,92,246,0.08), rgba(255,159,69,0.08)); }
+.login-card:hover::before { opacity: 1; }
+.login-card > * { position: relative; z-index: 1; }
+
+.login-card__icon { font-size: 2.2rem; margin-bottom: 6px; }
+.login-card h3 { font-size: 1.2rem; }
+.login-card p { color: var(--ink-soft); font-size: 0.92rem; }
+.login-card__go { font-weight: 700; color: var(--blue); margin-top: 10px; }
+
+/* -----------------------------------------------------------------
+   10b. FINAL CTA BANNER
+   ----------------------------------------------------------------- */
+.cta-banner {
+  background: var(--grad-warm);
+  position: relative;
+  overflow: hidden;
+}
+.cta-banner::before {
+  /* soft decorative glow, purely visual */
+  content: "";
+  position: absolute;
+  width: 420px; height: 420px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.18);
+  top: -180px; left: -120px;
+}
+.cta-banner__inner {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.cta-banner h2 {
+  color: #fff;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+}
+.cta-banner p {
+  color: rgba(255,255,255,0.9);
+  font-size: 1.05rem;
+  margin-bottom: 10px;
+}
+.cta-banner .btn--primary {
+  background: #fff;
+  color: var(--purple);
+}
+.cta-banner .btn--primary:hover { background: #fff; }
+
+/* -----------------------------------------------------------------
+   11. FOOTER
+   ----------------------------------------------------------------- */
+.footer { background: var(--ink); padding: 44px 0; color: rgba(255,255,255,0.75); }
+.footer__inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+.footer__brand { display: flex; align-items: center; gap: 10px; }
+.footer__links { display: flex; gap: 22px; flex-wrap: wrap; }
+.footer__links a:hover { color: #fff; }
+.footer__contact { text-align: end; font-size: 0.88rem; }
+.footer__contact p:first-child { margin-bottom: 4px; }
+
+/* -----------------------------------------------------------------
+   12. SCROLL-REVEAL ANIMATION (driven by IntersectionObserver in JS)
+   ----------------------------------------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* Twinkling star dots injected into .hero__stars by JS */
+.star {
+  position: absolute;
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: #fff;
+  opacity: 0.5;
+  animation: twinkle 3s ease-in-out infinite;
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.8; }
+}
+
+/* -----------------------------------------------------------------
+   13. RESPONSIVE
+   ----------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .hero__grid { grid-template-columns: 1fr; text-align: center; padding-block: 48px 90px; }
+  .hero__cta, .hero__stats { justify-content: center; }
+  .hero__sub { margin-inline: auto; }
+  .orbit { height: 340px; margin-top: 10px; }
+  .features__grid { grid-template-columns: repeat(2, 1fr); }
+  .platform__grid { grid-template-columns: 1fr; }
+  .subject-track { grid-template-columns: repeat(2, 1fr); }
+  .gami__grid { grid-template-columns: 1fr; }
+  .navbar__links { display: none; }
+  .navbar__toggle { display: flex; }
+}
+
+@media (max-width: 720px) {
+  section { padding: 60px 0; }
+  .stats__grid { grid-template-columns: repeat(2, 1fr); gap: 32px 20px; }
+  .navbar__actions .btn--ghost { display: none; }
+  .login-cards { grid-template-columns: 1fr; }
+  .footer__inner { flex-direction: column; text-align: center; }
+  .footer__contact { text-align: center; }
+
+  /* Simplify the orbit on small screens: keep gentle rotation but shrink rings */
+  .orbit { height: 280px; }
+  .orbit__ring--1 { width: 150px; height: 150px; }
+  .orbit__ring--2 { width: 220px; height: 220px; }
+  .orbit__ring--3 { width: 270px; height: 270px; }
+  .orbit__chip { width: 38px; height: 38px; font-size: 1.1rem; }
+  .orbit__portal { width: 96px; height: 96px; }
+}
+
+@media (max-width: 560px) {
+  .features__grid { grid-template-columns: 1fr; }
+  .subject-track { grid-template-columns: 1fr; }
+  .hero__stats { gap: 22px; }
+}
+
+/* Respect reduced-motion preference throughout */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Visible keyboard focus for accessibility */
+a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
+  outline: 3px solid var(--orange);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+/* -----------------------------------------------------------------
+   AUTH — floating "signed in as" chip (js/auth.js), shared by every
+   guarded page (learning-worlds, units, lesson pages, dashboards).
+   ----------------------------------------------------------------- */
+.auth-user-chip {
+  position: fixed;
+  top: 14px;
+  inset-inline-end: 16px;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  padding: 6px 8px 6px 6px;
+  box-shadow: var(--shadow-md);
+  font-family: var(--font-body);
+}
+.auth-user-chip__avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--bg-soft);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.05rem;
+  flex-shrink: 0;
+}
+.auth-user-chip__info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+.auth-user-chip__info strong { font-size: 0.82rem; color: var(--ink); }
+.auth-user-chip__info span { font-size: 0.68rem; color: var(--ink-soft); }
+.auth-user-chip__logout {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+.auth-user-chip__logout:hover { background: rgba(239,75,92,0.12); }
+
+@media (max-width: 560px) {
+  .auth-user-chip { top: auto; bottom: 14px; inset-inline-end: 14px; }
+  .auth-user-chip__info { display: none; }
+}
+

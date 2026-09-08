@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>محرك الدروس | EduVerse</title>
+  <meta name="description" content="EduVerse - منصة واحدة... ومغامرات تعلم لا تنتهي" />
+
+  <!-- Same font pairing as the rest of the platform -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <!-- Shared design tokens/buttons (colors, fonts, .btn) — reused, not recreated -->
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- EduBot AI companion styles -->
+  <link rel="stylesheet" href="css/edubot.css" />
+  <!-- Lesson Engine specific styles -->
+  <link rel="stylesheet" href="css/lesson-engine.css" />
+  <!-- Reused for real lesson content blocks (quiz, video embed, flip
+       cards, rich text) authored via the Teacher Dashboard — same
+       visual language already used by the flagship Lesson 1 page,
+       not a new design. -->
+  <link rel="stylesheet" href="css/lesson1.css" />
+  <!-- Real playable games + dynamic Virtual Lab styles -->
+  <link rel="stylesheet" href="css/games-engine.css" />
+
+  <!-- PWA manifest (installable app + Android-ready) -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#3A7BFF" />
+  <!-- Official EduVerse logo — favicon / app icon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/logo/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/images/logo/favicon-16.png" />
+  <link rel="apple-touch-icon" href="assets/images/logo/apple-touch-icon.png" />
+</head>
+<body class="lesson-mode" data-edubot-context="lesson" data-auth-required="student">
+
+  <!-- Branded page loader — pure CSS, fades itself out; see css/style.css -->
+  <div class="page-loader" aria-hidden="true">
+    <img src="assets/images/logo/logo-icon-128.png" alt="" class="page-loader__logo" />
+  </div>
+
+  <!--
+    NOTE ON LAYOUT: the Lesson Engine intentionally does NOT reuse the
+    marketing navbar/footer from other pages. A mission is a focused,
+    full-screen "player" experience — the Top Bar and Bottom Bar below
+    are this page's own navigation, as specified in the brief.
+  -->
+
+  <div class="lesson-shell">
+
+    <!-- ============================================= -->
+    <!-- TOP BAR — lesson identity + live student status -->
+    <!-- Filled in entirely by js/lesson-engine.js       -->
+    <!-- ============================================= -->
+    <header class="mission-topbar" id="missionTopbar">
+      <div class="mission-topbar__inner">
+
+        <a href="units.html" class="mission-topbar__brand" id="topbarSubjectLink">
+          <span class="mission-topbar__subject-icon" id="topbarSubjectIcon">📘</span>
+          <div class="mission-topbar__lesson-info">
+            <span class="mission-topbar__lesson-name" id="topbarLessonName">اسم الدرس</span>
+            <span class="mission-topbar__mission-label" id="topbarMissionLabel">المهمة 1 من 3</span>
+          </div>
+        </a>
+
+        <div class="mission-topbar__progress">
+          <div class="mission-topbar__bar">
+            <span class="mission-topbar__bar-fill" id="topbarProgressFill" style="width:0%"></span>
+          </div>
+          <div class="mission-topbar__dots" id="topbarMissionDots" aria-hidden="true">
+            <!-- mission step dots injected here -->
+          </div>
+        </div>
+
+        <div class="mission-topbar__stats">
+          <div class="topbar-chip" title="المستوى الحالي">
+            <span class="topbar-chip__icon">🏵️</span>
+            <strong id="topbarLevel">4</strong>
+          </div>
+          <div class="topbar-chip" title="نقاط الخبرة">
+            <span class="topbar-chip__icon">⭐</span>
+            <strong id="topbarXp">0</strong>
+          </div>
+          <div class="topbar-chip" title="العملات">
+            <span class="topbar-chip__icon">🪙</span>
+            <strong id="topbarCoins">0</strong>
+          </div>
+          <div class="topbar-chip topbar-chip--achievement" title="آخر إنجاز">
+            <span class="topbar-chip__icon">🏅</span>
+            <strong id="topbarAchievements">0</strong>
+          </div>
+          <button type="button" class="theme-toggle-btn" id="themeToggleBtn" aria-label="تبديل الوضع الليلي" title="الوضع الليلي">🌙</button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- ============================================= -->
+    <!-- MISSION STAGE — the reusable mission template  -->
+    <!-- ============================================= -->
+    <main class="mission-stage">
+      <div class="mission-stage__bg" id="missionStageBg" aria-hidden="true"></div>
+
+      <!-- Lesson-level Hero Banner (title, illustration, progress, time, XP) -->
+      <div class="lesson-hero-banner" id="lessonHeroBanner"></div>
+
+      <!-- Mission content is rendered here by js/lesson-engine.js -->
+      <div class="mission-content" id="missionContent"></div>
+
+      <!-- ============================================= -->
+      <!-- MISSION COMPLETE OVERLAY (hidden until earned) -->
+      <!-- ============================================= -->
+      <div class="mission-complete-overlay" id="missionCompleteOverlay" aria-hidden="true">
+        <div class="mission-complete-card">
+          <div class="mission-complete-card__confetti" id="completeConfetti" aria-hidden="true"></div>
+
+          <span class="mission-complete-card__icon">🎉</span>
+          <h2 class="mission-complete-card__title" id="completeTitle">أتممت المهمة!</h2>
+          <p class="mission-complete-card__sub" id="completeSub">أحسنت! إليك مكافآتك</p>
+
+          <div class="mission-complete-card__rewards">
+            <div class="reward-chip">
+              <span>⭐</span>
+              <strong id="completeXp">0</strong>
+              <span>XP</span>
+            </div>
+            <div class="reward-chip">
+              <span>🪙</span>
+              <strong id="completeCoins">0</strong>
+              <span>عملة</span>
+            </div>
+            <div class="reward-chip">
+              <span id="completeStars">☆☆☆</span>
+            </div>
+          </div>
+
+          <div class="mission-complete-card__badge" id="completeBadgeRow">
+            <span class="mission-complete-card__badge-icon">🏅</span>
+            <span>شارة جديدة: <strong id="completeBadgeName">اسم الشارة</strong></span>
+          </div>
+
+          <button type="button" class="btn btn--primary btn--lg has-ripple" id="completeContinueBtn">
+            المتابعة إلى المهمة التالية
+          </button>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- ============================================= -->
+    <!-- BOTTOM BAR — mission navigation controls        -->
+    <!-- ============================================= -->
+    <footer class="mission-bottombar">
+      <div class="mission-bottombar__inner">
+        <a href="units.html" class="btn btn--ghost btn--sm" id="returnToUnitBtn">↩ العودة للوحدة</a>
+
+        <div class="mission-bottombar__controls">
+          <button type="button" class="btn btn--secondary btn--sm has-ripple" id="prevMissionBtn">◀ المهمة السابقة</button>
+          <button type="button" class="btn btn--ghost btn--sm has-ripple" id="saveProgressBtn">💾 حفظ التقدم</button>
+          <button type="button" class="btn btn--primary btn--sm has-ripple" id="nextMissionBtn">المهمة التالية ▶</button>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- PWA: offline app-shell caching -->
+  <script src="js/pwa.js" defer></script>
+  <!-- Core gamification (XP/coins/badges) + cross-subject progress +
+       the Final Achievement Certificate — same modules Lesson 1 uses,
+       now shared here so a teacher-authored lesson has real rewards. -->
+  <script src="js/gamification.js" defer></script>
+  <script src="js/progress.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/certificate.js" defer></script>
+  <!-- Reads teacher-authored subjects/units/lessons (localStorage) -->
+  <script src="js/content-store.js" defer></script>
+  <!-- Real playable games + dynamic Virtual Lab engines -->
+  <script src="js/games-engine.js" defer></script>
+  <script src="js/virtual-lab.js" defer></script>
+  <script src="js/lesson-engine.js" defer></script>
+  <!-- EduBot AI companion -->
+  <script src="js/edubot.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>الوحدات | EduVerse</title>
+  <meta name="description" content="EduVerse - منصة واحدة... ومغامرات تعلم لا تنتهي" />
+
+  <!-- Same font pairing as the rest of the platform -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <!-- Shared design system (tokens, navbar, buttons, footer) — reused, not recreated -->
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- EduBot AI companion styles -->
+  <link rel="stylesheet" href="css/edubot.css" />
+  <!-- Page-specific styles for the Units Engine -->
+  <link rel="stylesheet" href="css/units.css" />
+
+  <!-- PWA manifest (installable app + Android-ready) -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#3A7BFF" />
+  <!-- Official EduVerse logo — favicon / app icon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/logo/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/images/logo/favicon-16.png" />
+  <link rel="apple-touch-icon" href="assets/images/logo/apple-touch-icon.png" />
+</head>
+<body class="page-transition" data-edubot-context="units" data-auth-required="student">
+
+  <!-- Branded page loader — pure CSS, fades itself out; see css/style.css -->
+  <div class="page-loader" aria-hidden="true">
+    <img src="assets/images/logo/logo-icon-128.png" alt="" class="page-loader__logo" />
+  </div>
+
+  <!-- ============================================= -->
+  <!-- NAVBAR (identical component to other pages)    -->
+  <!-- ============================================= -->
+  <header class="navbar" id="navbar">
+    <div class="container navbar__inner">
+
+      <a href="index.html" class="navbar__brand">
+        <span class="navbar__logo" aria-hidden="true">
+          <img src="assets/images/logo/logo-icon-64.png" alt="" class="navbar__logo-img" width="34" height="34" />
+        </span>
+        <span class="navbar__title">EduVerse</span>
+      </a>
+
+      <nav class="navbar__links" id="navLinks">
+        <a href="index.html#top" class="navbar__link">الرئيسية</a>
+        <a href="learning-worlds.html" class="navbar__link is-active">عوالم التعلّم</a>
+        <a href="gamification.html" class="navbar__link">الإنجازات</a>
+        <a href="leaderboard.html" class="navbar__link">المتصدرون</a>
+        <a href="gamification.html#certificates" class="navbar__link">الشهادات</a>
+        <a href="index.html#about" class="navbar__link">عن المنصة</a>
+        <a href="index.html#contact" class="navbar__link">تواصل معنا</a>
+      </nav>
+
+      <div class="navbar__actions">
+        <a href="teacher-dashboard.html" class="btn btn--ghost btn--sm">دخول المعلم</a>
+        <a href="login.html" class="btn btn--primary btn--sm">دخول الطالب</a>
+      </div>
+
+      <button class="navbar__toggle" id="navToggle" aria-label="فتح القائمة" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ============================================= -->
+    <!-- TOP SECTION — subject banner + student status  -->
+    <!-- Everything here is filled in by js/units.js     -->
+    <!-- based on the selected world. Nothing is         -->
+    <!-- hardcoded to any one subject.                   -->
+    <!-- ============================================= -->
+    <section class="subject-banner" id="subjectBanner">
+      <div class="subject-banner__bg" id="subjectBannerBg" aria-hidden="true"></div>
+      <div class="subject-banner__shapes" id="subjectBannerShapes" aria-hidden="true"></div>
+
+      <div class="container subject-banner__inner">
+
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb reveal" aria-label="مسار التنقّل">
+          <a href="index.html#top">الرئيسية</a>
+          <span class="breadcrumb__sep">/</span>
+          <a href="learning-worlds.html">عوالم التعلّم</a>
+          <span class="breadcrumb__sep">/</span>
+          <span class="breadcrumb__current" id="breadcrumbSubject">المادة</span>
+        </nav>
+
+        <div class="subject-banner__head reveal">
+          <span class="subject-banner__icon" id="subjectIcon">📘</span>
+          <div>
+            <h1 class="subject-banner__title" id="subjectTitle">المادة الدراسية</h1>
+            <p class="subject-banner__desc" id="subjectDesc">اختر وحدة لتبدأ رحلتك التعليمية.</p>
+          </div>
+        </div>
+
+        <!-- Student status row: overall progress, level, XP, coins, achievements -->
+        <div class="student-status reveal">
+
+          <div class="student-status__progress">
+            <div class="student-status__progress-label">
+              <span>تقدّمك في هذه المادة</span>
+              <span id="overallProgressLabel">0%</span>
+            </div>
+            <div class="student-status__bar">
+              <span class="student-status__bar-fill" id="overallProgressFill" style="width:0%"></span>
+            </div>
+          </div>
+
+          <div class="student-status__stats">
+            <div class="stat-chip">
+              <span class="stat-chip__icon">🏵️</span>
+              <div>
+                <strong id="levelValue">1</strong>
+                <span>المستوى</span>
+              </div>
+            </div>
+            <div class="stat-chip">
+              <span class="stat-chip__icon">⭐</span>
+              <div>
+                <strong id="xpValue" data-count-to="0">0</strong>
+                <span>XP</span>
+              </div>
+            </div>
+            <div class="stat-chip">
+              <span class="stat-chip__icon">🪙</span>
+              <div>
+                <strong id="coinsValue" data-count-to="0">0</strong>
+                <span>عملة</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="student-status__achievements" id="achievementsPreview" aria-label="آخر الإنجازات">
+            <!-- small achievement badges injected by js/units.js -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================= -->
+    <!-- UNITS GRID (rendered from data by js/units.js) -->
+    <!-- This is the generic "Units Engine": the exact   -->
+    <!-- same markup + logic renders any subject's units.-->
+    <!-- ============================================= -->
+    <section class="units-section">
+      <div class="container">
+        <div class="units-section__head reveal">
+          <h2 class="section-title">وحدات التعلّم</h2>
+          <p class="section-subtitle">أكمل كل وحدة لفتح ما بعدها، واجمع النجوم والعملات في طريقك</p>
+        </div>
+
+        <div class="units-path" id="unitsPath" aria-live="polite">
+          <!-- unit-card elements are injected here -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================= -->
+  <!-- FOOTER (identical component to other pages)    -->
+  <!-- ============================================= -->
+  <footer class="footer" id="contact">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <span class="navbar__logo" aria-hidden="true">
+          <img src="assets/images/logo/logo-icon-64.png" alt="" class="navbar__logo-img" width="30" height="30" />
+        </span>
+        <span class="navbar__title navbar__title--footer">EduVerse</span>
+      </div>
+
+      <nav class="footer__links">
+        <a href="index.html#top">الرئيسية</a>
+        <a href="learning-worlds.html">عوالم التعلّم</a>
+        <a href="gamification.html">الإنجازات</a>
+        <a href="index.html#login">تسجيل الدخول</a>
+      </nav>
+
+      <div class="footer__contact">
+        <p>تواصل معنا: info@eduverse.app</p>
+        <p>© 2026 EduVerse. جميع الحقوق محفوظة.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Shared behaviors (navbar toggle, scroll reveal, etc.) -->
+  <!-- PWA: offline app-shell caching -->
+  <script src="js/pwa.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <!-- Cross-subject completed-lesson tracking, so unit cards can show
+       real progress instead of only demo values -->
+  <script src="js/progress.js" defer></script>
+  <!-- Reads teacher-authored subjects/units/lessons (localStorage) -->
+  <script src="js/content-store.js" defer></script>
+  <script src="js/grades.js" defer></script>
+  <!-- Units Engine logic -->
+  <script src="js/units.js" defer></script>
+  <!-- EduBot AI companion -->
+  <script src="js/edubot.js" defer></script>
+</body>
+</html>

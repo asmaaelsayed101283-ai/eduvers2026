@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduVerse | منصة التعلم الرقمي</title>
+  <meta name="description" content="EduVerse - منصة واحدة... ومغامرات تعلم لا تنتهي" />
+
+  <!-- Google Fonts: Cairo for display, Tajawal for body — both native Arabic + Latin support -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- EduBot AI companion styles -->
+  <link rel="stylesheet" href="css/edubot.css" />
+
+  <!-- PWA manifest (installable app + Android-ready) -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#3A7BFF" />
+  <!-- Official EduVerse logo — favicon / app icon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/logo/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/images/logo/favicon-16.png" />
+  <link rel="apple-touch-icon" href="assets/images/logo/apple-touch-icon.png" />
+</head>
+<body data-edubot-context="home">
+
+  <!-- Branded page loader — pure CSS, fades itself out; see css/style.css -->
+  <div class="page-loader" aria-hidden="true">
+    <img src="assets/images/logo/logo-icon-128.png" alt="" class="page-loader__logo" />
+  </div>
+
+  <!-- ============================================= -->
+  <!-- NAVBAR                                         -->
+  <!-- ============================================= -->
+  <header class="navbar" id="navbar">
+    <div class="container navbar__inner">
+
+      <a href="#top" class="navbar__brand">
+        <span class="navbar__logo" aria-hidden="true">
+          <img src="assets/images/logo/logo-icon-64.png" alt="" class="navbar__logo-img" width="34" height="34" />
+        </span>
+        <span class="navbar__title">EduVerse</span>
+      </a>
+
+      <nav class="navbar__links" id="navLinks">
+        <a href="#top" class="navbar__link is-active">الرئيسية</a>
+        <a href="#subjects" class="navbar__link">المواد الدراسية</a>
+        <a href="gamification.html" class="navbar__link">الإنجازات</a>
+        <a href="#leaderboard" class="navbar__link">المتصدرون</a>
+        <a href="#certificates" class="navbar__link">الشهادات</a>
+        <a href="#about" class="navbar__link">عن المنصة</a>
+        <a href="#contact" class="navbar__link">تواصل معنا</a>
+      </nav>
+
+      <div class="navbar__actions">
+        <a href="#login" class="btn btn--ghost btn--sm">دخول المعلم</a>
+        <a href="#login" class="btn btn--primary btn--sm">دخول الطالب</a>
+      </div>
+
+      <button class="navbar__toggle" id="navToggle" aria-label="فتح القائمة" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ============================================= -->
+    <!-- HERO SECTION — signature "Orbit Portal"        -->
+    <!-- ============================================= -->
+    <section class="hero">
+      <div class="hero__bg" aria-hidden="true"></div>
+      <div class="hero__stars" aria-hidden="true" id="heroStars"></div>
+
+      <div class="container hero__grid">
+
+        <div class="hero__copy">
+          <div class="brand-lockup" style="margin-bottom:22px">
+            <img src="assets/images/logo/logo-full.jpg" alt="EduVerse" width="120" />
+          </div>
+          <span class="eyebrow">✦ عالمك التعليمي الجديد</span>
+          <h1 class="hero__title">
+            منصة التعلم الرقمي
+            <span class="hero__brand-chip">EduVerse</span>
+          </h1>
+          <p class="hero__tagline">منصة واحدة... ومغامرات تعلم لا تنتهي</p>
+          <p class="hero__sub">تعلّم العلوم، الرياضيات، اللغات والمزيد عبر مهام ممتعة، نقاط خبرة، وشهادات حقيقية — في مغامرة واحدة متكاملة.</p>
+
+          <div class="hero__cta">
+            <a href="#subjects" class="btn btn--primary btn--lg">استكشف المواد</a>
+            <a href="#login" class="btn btn--secondary btn--lg">ابدأ رحلتك الآن</a>
+          </div>
+
+          <div class="hero__stats">
+            <div class="hero__stat"><strong>+7</strong><span>مواد دراسية</span></div>
+            <div class="hero__stat"><strong>∞</strong><span>مهام ومغامرات</span></div>
+            <div class="hero__stat"><strong>100%</strong><span>تعلم تفاعلي</span></div>
+          </div>
+        </div>
+
+        <!-- The Orbit Portal: signature visual — subjects orbit the EduVerse portal -->
+        <div class="orbit" aria-hidden="true">
+          <div class="orbit__portal">
+            <span class="orbit__portal-glow"></span>
+            <span class="orbit__portal-core">Edu<br/>Verse</span>
+          </div>
+
+          <div class="orbit__ring orbit__ring--1">
+            <span class="orbit__chip" style="--c:#3A7BFF">🔬</span>
+            <span class="orbit__chip" style="--c:#22D3EE">📖</span>
+          </div>
+          <div class="orbit__ring orbit__ring--2">
+            <span class="orbit__chip" style="--c:#8B5CF6">➗</span>
+            <span class="orbit__chip" style="--c:#FF9F45">🌍</span>
+            <span class="orbit__chip" style="--c:#3A7BFF">💻</span>
+          </div>
+          <div class="orbit__ring orbit__ring--3">
+            <span class="orbit__chip" style="--c:#22D3EE">✍️</span>
+            <span class="orbit__chip" style="--c:#8B5CF6">🇫🇷</span>
+          </div>
+        </div>
+
+      </div>
+
+      <svg class="hero__wave" viewBox="0 0 1440 100" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,40 C 240,100 480,0 720,40 C 960,80 1200,10 1440,50 L1440,100 L0,100 Z" fill="var(--bg-soft)"/>
+      </svg>
+    </section>
+
+    <!-- ============================================= -->
+    <!-- STATISTICS SECTION                             -->
+    <!-- Numbers animate with a count-up effect via js/main.js -->
+    <!-- ============================================= -->
+    <section class="stats">
+      <div class="container stats__grid">
+        <div class="stat-block reveal">
+          <span class="stat-block__icon">📚</span>
+          <strong class="stat-block__num" data-count-to="7">0</strong>
+          <span class="stat-block__label">مواد دراسية</span>
+        </div>
+        <div class="stat-block reveal">
+          <span class="stat-block__icon">🎯</span>
+          <strong class="stat-block__num" data-infinity="true">0</strong>
+          <span class="stat-block__label">مهمة ومغامرة تعليمية</span>
+        </div>
+        <div class="stat-block reveal">
+          <span class="stat-block__icon">🎮</span>
+          <strong class="stat-block__num" data-count-to="100" data-suffix="%">0</strong>
+          <span class="stat-block__label">تعلم قائم على اللعب</span>
+        </div>
+        <div class="stat-block reveal">
+          <span class="stat-block__icon">⏰</span>
+          <strong class="stat-block__num" data-count-to="24" data-suffix="/7">0</strong>
+          <span class="stat-block__label">متاحة في أي وقت</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================= -->
+    <!-- WHY EDUVERSE — feature strip                   -->
+    <!-- ============================================= -->
+    <section class="features" id="about">
+      <div class="container">
+        <div class="brand-lockup brand-lockup--sm reveal" style="margin-bottom:18px">
+          <img src="assets/images/logo/logo-icon-64.png" alt="EduVerse" width="44" height="44" />
+        </div>
+        <h2 class="section-title reveal">لماذا EduVerse؟</h2>
+        <p class="section-subtitle reveal">منصة مصممة لتحويل التعلّم إلى مغامرة يومية ممتعة</p>
+
+        <div class="features__grid">
+          <article class="feature-card reveal">
+            <div class="feature-card__icon" style="--c1:#3A7BFF;--c2:#22D3EE">🎮</div>
+            <h3>تعلّم بأسلوب الألعاب</h3>
+            <p>مهام، نقاط خبرة، وعملات تجعل كل درس تجربة مشوّقة لا واجبًا ثقيلًا.</p>
+          </article>
+          <article class="feature-card reveal">
+            <div class="feature-card__icon" style="--c1:#8B5CF6;--c2:#3A7BFF">🧩</div>
+            <h3>كل المواد في مكان واحد</h3>
+            <p>العلوم، الرياضيات، اللغات والمزيد — رحلة تعليمية واحدة متكاملة لكل المواد.</p>
+          </article>
+          <article class="feature-card reveal">
+            <div class="feature-card__icon" style="--c1:#FF9F45;--c2:#8B5CF6">📈</div>
+            <h3>تتبّع تقدمك بدقة</h3>
+            <p>لوحة تحكم تعرض مستواك، شاراتك، وسلسلة أيام تعلمك أولًا بأول.</p>
+          </article>
+          <article class="feature-card reveal">
+            <div class="feature-card__icon" style="--c1:#22D3EE;--c2:#3A7BFF">🏆</div>
+            <h3>شهادات حقيقية</h3>
+            <p>أكمل مهامك واحصل على شهادات إنجاز تحتفظ بها في ملفك الشخصي.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================= -->
+    <!-- PLATFORM FEATURES — what the platform provides -->
+    <!-- (distinct from "Why EduVerse", which speaks to  -->
+    <!-- the learner's experience and motivation)        -->
+    <!-- ============================================= -->
+    <section class="platform">
+      <div class="container">
+        <h2 class="section-title reveal">مكونات المنصة</h2>
+        <p class="section-subtitle reveal">كل الأدوات التي يحتاجها الطالب والمعلم، في نظام واحد متكامل</p>
+
+        <div class="platform__grid">
+          <div class="platform-item reveal" style="--c:#3A7BFF">
+            <span class="platform-item__icon">🧠</span>
+            <div>
+              <h3>محرك دروس موحّد</h3>
+              <p>قالب درس واحد يعمل مع كل المواد: مقدمة، أهداف، شرح تفاعلي، أنشطة، واختبار.</p>
+            </div>
+          </div>
+          <div class="platform-item reveal" style="--c:#8B5CF6">
+            <span class="platform-item__icon">🕹️</span>
+            <div>
+              <h3>نظام تحفيز متكامل</h3>
+              <p>نقاط خبرة، عملات، مستويات، وشارات إنجاز تواكب كل خطوة في رحلة الطالب.</p>
+            </div>
+          </div>
+          <div class="platform-item reveal" style="--c:#22D3EE">
+            <span class="platform-item__icon">📊</span>
+            <div>
+              <h3>لوحة تحكم الطالب</h3>
+              <p>الأفاتار، التقدم، الشارات، وسجلّ المهام في مكان واحد سهل المتابعة.</p>
+            </div>
+          </div>
+          <div class="platform-item reveal" style="--c:#FF9F45">
+            <span class="platform-item__icon">🗂️</span>
+            <div>
+              <h3>لوحة تحكم المعلم</h3>
+              <p>إدارة الدروس، متابعة الطلاب، وتقارير الأداء من واجهة واحدة مبسّطة.</p>
+            </div>
+          </div>
+          <div class="platform-item reveal" style="--c:#3A7BFF">
+            <span class="platform-item__icon">🎓</span>
+            <div>
+              <h3>شهادات رقمية</h3>
+              <p>شهادة إنجاز تُمنح تلقائيًا بعد إكمال كل مهمة تعليمية بنجاح.</p>
+            </div>
+          </div>
+          <div class="platform-item reveal" style="--c:#8B5CF6">
+            <span class="platform-item__icon">📱</span>
+            <div>
+              <h3>متجاوب مع كل الأجهزة</h3>
+              <p>تجربة سلسة ومتناسقة على الحاسوب، الجهاز اللوحي، والهاتف المحمول.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================= -->
+    <!-- SUBJECTS PREVIEW (data-driven via JS)          -->
+    <!-- ============================================= -->
+    <section class="subjects-preview" id="subjects">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title reveal">اختر مغامرتك</h2>
+            <p class="section-subtitle reveal">كل مادة عالم قائم بذاته، بمهامه وجوائزه الخاصة</p>
+          </div>
+          <a href="learning-worlds.html" class="link-arrow reveal">عرض كل المواد ←</a>
+        </div>
+
+        <!-- Cards are injected by js/main.js from a data array — nothing here is hardcoded -->
+        <div class="subject-track" id="subjectTrack" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- ============================================= -->
+    <!-- GAMIFICATION TEASER                            -->
+    <!-- ============================================= -->
+    <section class="gami" id="achievements">
+      <div class="container gami__grid">
+        <div class="gami__copy">
+          <span class="eyebrow eyebrow--light">✦ نظام التحفيز</span>
+          <h2 class="section-title section-title--light reveal">كل خطوة... تستحق مكافأة</h2>
+          <p class="section-subtitle section-subtitle--light reveal">اكسب نقاط الخبرة، اجمع العملات، افتح الشارات، وتسلّق قائمة المتصدرين مع كل مهمة تُنجزها.</p>
+
+          <div class="gami__badges reveal">
+            <span class="gami__badge" style="--c:#FF9F45">🔥 <b>12</b> يوم متتالي</span>
+            <span class="gami__badge" style="--c:#8B5CF6">🏅 <b>9</b> شارات</span>
+            <span class="gami__badge" style="--c:#22D3EE">🪙 <b>430</b> عملة</span>
+          </div>
+        </div>
+
+        <div class="gami__panel reveal">
+          <div class="gami__row">
+            <span>المستوى 4</span>
+            <span>1,250 / 2,000 XP</span>
+          </div>
+          <div class="xp-bar"><span class="xp-bar__fill" style="width:62%"></span></div>
+
+          <div class="gami__chest" id="chestBtn" tabindex="0" role="button" aria-label="افتح صندوق الكنز">
+            <span class="gami__chest-icon">🎁</span>
+            <span class="gami__chest-label">صندوق المكافأة اليومية</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================= -->
+    <!-- LOGIN SECTION                                  -->
+    <!-- ============================================= -->
+    <section class="login-cta" id="login">
+      <div class="container">
+        <h2 class="section-title reveal">جاهز للانطلاق؟</h2>
+        <p class="section-subtitle reveal">اختر دورك وابدأ رحلتك داخل EduVerse</p>
+
+        <div class="login-cards">
+          <a href="login.html" class="login-card reveal login-card--student">
+            <span class="login-card__icon">🚀</span>
+            <h3>دخول الطالب</h3>
+            <p>تابع مهامك، اجمع نقاطك، واصعد في المستويات</p>
+            <span class="login-card__go">ابدأ المغامرة ←</span>
+          </a>
+          <a href="teacher-dashboard.html" class="login-card reveal login-card--teacher">
+            <span class="login-card__icon">🧑‍🏫</span>
+            <h3>دخول المعلم</h3>
+            <p>أدر دروسك وتابع تقدّم طلابك بسهولة</p>
+            <span class="login-card__go">دخول لوحة التحكم ←</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================= -->
+    <!-- FINAL CALL TO ACTION BANNER                    -->
+    <!-- ============================================= -->
+    <section class="cta-banner">
+      <div class="container cta-banner__inner">
+        <h2 class="reveal">مغامرتك التعليمية على بعد نقرة واحدة</h2>
+        <p class="reveal">انضم إلى EduVerse اليوم وابدأ أول مهمة في رحلتك التعليمية.</p>
+        <a href="#login" class="btn btn--primary btn--lg reveal">ابدأ الآن مجانًا</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================= -->
+  <!-- FOOTER                                         -->
+  <!-- ============================================= -->
+  <footer class="footer" id="contact">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <span class="navbar__logo" aria-hidden="true">
+          <img src="assets/images/logo/logo-icon-64.png" alt="" class="navbar__logo-img" width="30" height="30" />
+        </span>
+        <span class="navbar__title navbar__title--footer">EduVerse</span>
+      </div>
+
+      <nav class="footer__links">
+        <a href="#top">الرئيسية</a>
+        <a href="#subjects">المواد الدراسية</a>
+        <a href="gamification.html">الإنجازات</a>
+        <a href="#login">تسجيل الدخول</a>
+      </nav>
+
+      <div class="footer__contact">
+        <p>تواصل معنا: info@eduverse.app</p>
+        <p>© 2026 EduVerse. جميع الحقوق محفوظة.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- PWA: offline app-shell caching -->
+  <script src="js/pwa.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <!-- EduBot AI companion -->
+  <script src="js/edubot.js" defer></script>
+</body>
+</html>

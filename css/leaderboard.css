@@ -1,0 +1,77 @@
+/* =================================================================
+   EDUVERSE — LEADERBOARD (leaderboard.html + dashboard preview)
+   ================================================================= */
+
+.leaderboard-hero {
+  background: var(--grad-hero);
+  color: #fff;
+  padding: 70px 0 50px;
+  text-align: center;
+}
+.leaderboard-hero h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); margin-bottom: 8px; }
+.leaderboard-hero p { opacity: 0.9; max-width: 560px; margin: 0 auto; }
+
+.leaderboard-wrap {
+  max-width: 720px;
+  margin: -30px auto 60px;
+  padding: 0 20px;
+}
+
+.my-rank-chip {
+  background: var(--card-bg);
+  border-radius: 999px;
+  box-shadow: var(--shadow-md);
+  padding: 14px 22px;
+  text-align: center;
+  font-weight: 800;
+  color: var(--blue);
+  margin-bottom: 20px;
+}
+
+.leaderboard-list {
+  list-style: none;
+  background: var(--card-bg);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+.leaderboard-row {
+  display: grid;
+  grid-template-columns: 44px 40px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border-soft);
+  font-size: 0.95rem;
+}
+.leaderboard-row:last-child { border-bottom: none; }
+.leaderboard-row__rank { font-weight: 900; font-size: 1.1rem; text-align: center; color: var(--ink-soft); }
+.leaderboard-row__avatar { font-size: 1.4rem; text-align: center; }
+.leaderboard-row__name em { color: var(--blue); font-style: normal; font-weight: 700; }
+.leaderboard-row__xp { font-weight: 800; color: var(--orange); white-space: nowrap; }
+.leaderboard-row.is-me {
+  background: rgba(58,123,255,0.07);
+  border-inline-start: 4px solid var(--blue);
+}
+
+/* -----------------------------------------------------------------
+   PREVIEW WIDGET — embedded on the Student Dashboard (gamification.html)
+   ----------------------------------------------------------------- */
+.leaderboard-preview__list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.leaderboard-preview__list li {
+  display: grid;
+  grid-template-columns: 30px 30px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: var(--r-sm);
+  font-size: 0.86rem;
+  background: var(--bg-soft);
+}
+.leaderboard-preview__list li.is-me { background: rgba(58,123,255,0.1); font-weight: 800; }
+.leaderboard-preview__list strong { color: var(--orange); }
+.leaderboard-preview__me { margin-top: 10px; font-size: 0.85rem; font-weight: 700; color: var(--blue); text-align: center; }
+
+@media (max-width: 480px) {
+  .leaderboard-row { grid-template-columns: 34px 30px 1fr auto; padding: 12px; font-size: 0.85rem; }
+}

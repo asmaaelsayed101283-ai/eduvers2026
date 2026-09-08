@@ -1,0 +1,265 @@
+/* =================================================================
+   EDUVERSE — GAMES ENGINE STYLES
+   -------------------------------------------------------------------
+   Reuses the exact same design tokens (--blue, --purple, --r-md, etc.)
+   already defined in css/style.css — this is new content shapes, not
+   a new design language.
+   ================================================================= */
+
+.game-instructions {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  margin-bottom: 12px;
+}
+
+.game-score-bar {
+  margin-top: 16px;
+  padding: 10px 14px;
+  border-radius: var(--r-sm);
+  background: var(--bg-soft);
+  font-weight: 700;
+  font-size: 0.88rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.game-score-bar.is-complete { background: rgba(34,197,94,0.14); color: #16A34A; }
+.game-score-bar__done { color: #16A34A; }
+
+/* ---------- 1) MATCH ---------- */
+.match-game { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.match-game__col { display: flex; flex-direction: column; gap: 8px; }
+.match-tile {
+  padding: 12px 14px;
+  border-radius: var(--r-sm);
+  border: 2px solid var(--border-soft);
+  background: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: start;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.match-tile.is-selected { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(58,123,255,0.15); }
+.match-tile.is-matched { border-color: #16A34A; background: rgba(34,197,94,0.1); cursor: default; opacity: 0.75; }
+.match-tile.is-wrong-flash { border-color: #DC2626; box-shadow: 0 0 0 3px rgba(220,38,38,0.15); }
+
+/* ---------- 2) MEMORY ---------- */
+.memory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
+.memory-card { height: 90px; border: none; background: transparent; cursor: pointer; padding: 0; perspective: 700px; }
+.memory-card__inner {
+  position: relative; width: 100%; height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.45s ease;
+  border-radius: var(--r-sm);
+}
+.memory-card.is-flipped .memory-card__inner,
+.memory-card.is-matched .memory-card__inner { transform: rotateY(180deg); }
+.memory-card__face {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--r-sm);
+  backface-visibility: hidden;
+  padding: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-align: center;
+}
+.memory-card__face--back { background: linear-gradient(135deg, var(--blue), var(--purple)); color: #fff; font-size: 1.4rem; }
+.memory-card__face--front { background: var(--bg-soft); color: var(--ink); transform: rotateY(180deg); }
+.memory-card.is-matched .memory-card__face--front { background: rgba(34,197,94,0.15); }
+
+/* ---------- 3) DRAG & DROP ---------- */
+.dragdrop-game { display: flex; flex-direction: column; gap: 16px; }
+.dragdrop-game__bank { display: flex; flex-wrap: wrap; gap: 8px; }
+.dragdrop-chip {
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: grab;
+  user-select: none;
+}
+.dragdrop-chip.is-selected { outline: 3px solid rgba(58,123,255,0.4); }
+.dragdrop-game__zones { display: flex; flex-direction: column; gap: 8px; }
+.dragdrop-zone {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 10px 14px;
+  border: 2px dashed var(--border-soft);
+  border-radius: var(--r-sm);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.dragdrop-zone__slot { font-weight: 700; color: var(--blue); }
+.dragdrop-zone.is-filled { border-style: solid; }
+.dragdrop-zone.is-correct { border-color: #16A34A; background: rgba(34,197,94,0.08); cursor: default; }
+.dragdrop-zone.is-wrong-flash { border-color: #DC2626; }
+
+/* ---------- 4) CLASSIFICATION ---------- */
+.classify-game { display: flex; flex-direction: column; gap: 18px; }
+.classify-game__pool { display: flex; flex-wrap: wrap; gap: 8px; }
+.classify-game__bins { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.classify-bin {
+  padding: 22px 14px;
+  border-radius: var(--r-md);
+  text-align: center;
+  font-weight: 800;
+  cursor: pointer;
+  border: 2px dashed var(--border-soft);
+}
+.classify-bin--correct { background: rgba(34,197,94,0.08); }
+.classify-bin--wrong { background: rgba(220,38,38,0.08); }
+.classify-bin.is-wrong-flash { border-color: #DC2626; }
+
+/* ---------- 5) LABEL DIAGRAM ---------- */
+.label-diagram__image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background-size: cover;
+  background-position: center;
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+.label-diagram__pin {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  background: var(--blue);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.label-diagram__pin.is-solved { background: #16A34A; }
+.label-diagram__picker {
+  margin-top: 14px;
+  background: var(--bg-soft);
+  border-radius: var(--r-sm);
+  padding: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+/* ---------- 6) PUZZLE ---------- */
+.puzzle-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--puzzle-size), 1fr);
+  gap: 3px;
+  max-width: 320px;
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+}
+.puzzle-tile { border: none; border-radius: 6px; cursor: pointer; background-repeat: no-repeat; }
+.puzzle-tile--blank { background: var(--bg-soft); border-radius: 6px; cursor: default; }
+
+/* ---------- 8) SENTENCE BUILDER ---------- */
+.sentence-slot {
+  min-height: 54px;
+  border: 2px dashed var(--border-soft);
+  border-radius: var(--r-sm);
+  padding: 10px;
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  margin-bottom: 14px;
+}
+.sentence-slot.is-correct { border-color: #16A34A; background: rgba(34,197,94,0.08); }
+.sentence-slot.is-wrong { border-color: #DC2626; background: rgba(220,38,38,0.08); }
+.sentence-bank { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.sentence-word {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  background: var(--bg-soft);
+  font-weight: 700;
+  cursor: pointer;
+}
+.sentence-word--placed { background: linear-gradient(135deg, var(--blue), var(--purple)); color: #fff; cursor: default; }
+
+/* ---------- 10) WORD SEARCH ---------- */
+.wordsearch-wrap { display: flex; flex-direction: column; gap: 16px; align-items: center; }
+.wordsearch-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--ws-size), 1fr);
+  gap: 2px;
+  max-width: 380px;
+  user-select: none;
+}
+.wordsearch-cell {
+  aspect-ratio: 1 / 1;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg-soft);
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.wordsearch-cell.is-anchor { outline: 2px solid var(--blue); }
+.wordsearch-cell.is-found { background: rgba(34,197,94,0.25); color: #16A34A; }
+.wordsearch-words { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.wordsearch-word { padding: 6px 12px; border-radius: 999px; background: var(--bg-soft); font-weight: 700; font-size: 0.8rem; }
+.wordsearch-word.is-found { background: rgba(34,197,94,0.18); color: #16A34A; text-decoration: line-through; }
+
+/* ---------- Game picker tabs (lesson-engine "games" block) ---------- */
+.games-tab-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.games-tab-btn {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1.5px solid var(--border-soft);
+  background: #fff;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.games-tab-btn.is-active { border-color: var(--blue); background: rgba(58,123,255,0.1); color: var(--blue); }
+.games-stage { min-height: 120px; }
+
+@media (max-width: 640px) {
+  .match-game { grid-template-columns: 1fr; }
+  .classify-game__bins { grid-template-columns: 1fr; }
+}
+
+/* -----------------------------------------------------------------
+   VIRTUAL LAB
+   ----------------------------------------------------------------- */
+.lab-card {
+  background: var(--bg-soft);
+  border-radius: var(--r-md);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.lab-card__title { font-size: 1.1rem; }
+.lab-list { list-style: none; margin: 0 0 6px; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 0.88rem; }
+.lab-list--ordered { list-style: decimal; padding-inline-start: 20px; }
+.lab-list--ordered li { padding-inline-start: 4px; }
+.lab-safety {
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.25);
+  border-radius: var(--r-sm);
+  padding: 12px 14px;
+}
+.lab-sim__bank { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+.lab-sim__chip.is-selected { outline: 3px solid rgba(58,123,255,0.4); }
+.lab-sim__beaker {
+  padding: 16px;
+  border-radius: var(--r-sm);
+  background: #fff;
+  border: 2px dashed var(--border-soft);
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.lab-sim__result { font-weight: 700; margin-top: 10px; }
+.lab-sim__result.is-correct { color: #16A34A; }
+.lab-card--result { text-align: center; align-items: center; }
+.lab-final-score { font-size: 2rem; font-weight: 900; color: var(--blue); }
+

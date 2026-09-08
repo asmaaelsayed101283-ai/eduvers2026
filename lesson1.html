@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>الدرس الأول: بنية الذرة | EduVerse</title>
+  <meta name="description" content="EduVerse - منصة واحدة... ومغامرات تعلم لا تنتهي" />
+
+  <!-- Same font pairing as the rest of the platform -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <!-- Shared design tokens (css/style.css) + the Lesson Engine shell styles
+       (css/lesson-engine.css) are reused as-is, unmodified. -->
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- EduBot AI companion styles -->
+  <link rel="stylesheet" href="css/edubot.css" />
+  <link rel="stylesheet" href="css/lesson-engine.css" />
+  <!-- Extra styles only for this lesson's engagement-placeholder types
+       (drag & drop, matching, flip cards, hotspots, timeline, puzzle, etc.) -->
+  <link rel="stylesheet" href="css/lesson1.css" />
+  <!-- Final Achievement Certificate styles -->
+  <link rel="stylesheet" href="css/certificate.css" />
+
+  <!-- PWA manifest (installable app + Android-ready) -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#3A7BFF" />
+  <!-- Official EduVerse logo — favicon / app icon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/logo/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/images/logo/favicon-16.png" />
+  <link rel="apple-touch-icon" href="assets/images/logo/apple-touch-icon.png" />
+</head>
+<body class="lesson-mode" data-edubot-context="lesson" data-auth-required="student">
+
+  <!-- Branded page loader — pure CSS, fades itself out; see css/style.css -->
+  <div class="page-loader" aria-hidden="true">
+    <img src="assets/images/logo/logo-icon-128.png" alt="" class="page-loader__logo" />
+  </div>
+
+  <!--
+    ==================================================================
+    LESSON 1 — "Structure of the Atom" (Unit 1: The Matter)
+    ==================================================================
+    This page reuses the exact shell markup, element IDs, and CSS
+    classes established by the reusable Lesson Engine (lesson-engine.html
+    / css/lesson-engine.css). Only js/lesson1.js differs: it supplies
+    this specific lesson's REAL content (taken only from the attached
+    source lesson) instead of generic placeholder text.
+
+    Every Activity/Challenge/Illustration block below is a PLACEHOLDER
+    container only — no interactive logic (drag & drop, matching, etc.)
+    is implemented in this phase, per the brief.
+    ==================================================================
+  -->
+
+  <div class="lesson-shell">
+
+    <!-- ============================================= -->
+    <!-- TOP BAR — identical structure to the Lesson Engine -->
+    <!-- ============================================= -->
+    <header class="mission-topbar" id="missionTopbar">
+      <div class="mission-topbar__inner">
+
+        <a href="units.html?world=science" class="mission-topbar__brand" id="topbarSubjectLink">
+          <span class="mission-topbar__subject-icon" id="topbarSubjectIcon">🧪</span>
+          <div class="mission-topbar__lesson-info">
+            <span class="mission-topbar__lesson-name" id="topbarLessonName">Lesson 1: Structure of the Atom</span>
+            <span class="mission-topbar__mission-label" id="topbarMissionLabel">المهمة 1 من 3</span>
+          </div>
+        </a>
+
+        <div class="mission-topbar__progress">
+          <div class="mission-topbar__bar">
+            <span class="mission-topbar__bar-fill" id="topbarProgressFill" style="width:0%"></span>
+          </div>
+          <div class="mission-topbar__dots" id="topbarMissionDots" aria-hidden="true"></div>
+        </div>
+
+        <div class="mission-topbar__stats">
+          <div class="topbar-chip" title="المستوى الحالي">
+            <span class="topbar-chip__icon">🏵️</span>
+            <strong id="topbarLevel">4</strong>
+          </div>
+          <div class="topbar-chip" title="نقاط الخبرة">
+            <span class="topbar-chip__icon">⭐</span>
+            <strong id="topbarXp">0</strong>
+          </div>
+          <div class="topbar-chip" title="العملات">
+            <span class="topbar-chip__icon">🪙</span>
+            <strong id="topbarCoins">0</strong>
+          </div>
+          <div class="topbar-chip topbar-chip--achievement" title="آخر إنجاز">
+            <span class="topbar-chip__icon">🏅</span>
+            <strong id="topbarAchievements">0</strong>
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- ============================================= -->
+    <!-- MISSION STAGE                                  -->
+    <!-- ============================================= -->
+    <main class="mission-stage">
+      <div class="mission-stage__bg" id="missionStageBg" aria-hidden="true"></div>
+
+      <!-- Mission content is rendered here by js/lesson1.js -->
+      <div class="mission-content" id="missionContent"></div>
+
+      <!-- ============================================= -->
+      <!-- MISSION COMPLETE OVERLAY (hidden until earned) -->
+      <!-- ============================================= -->
+      <div class="mission-complete-overlay" id="missionCompleteOverlay" aria-hidden="true">
+        <div class="mission-complete-card">
+          <div class="mission-complete-card__confetti" id="completeConfetti" aria-hidden="true"></div>
+
+          <span class="mission-complete-card__icon">🎉</span>
+          <h2 class="mission-complete-card__title" id="completeTitle">أتممت المهمة!</h2>
+          <p class="mission-complete-card__sub" id="completeSub">أحسنت! إليك مكافآتك</p>
+
+          <div class="mission-complete-card__rewards">
+            <div class="reward-chip">
+              <span>⭐</span>
+              <strong id="completeXp">0</strong>
+              <span>XP</span>
+            </div>
+            <div class="reward-chip">
+              <span>🪙</span>
+              <strong id="completeCoins">0</strong>
+              <span>عملة</span>
+            </div>
+            <div class="reward-chip">
+              <span id="completeStars">☆☆☆</span>
+            </div>
+          </div>
+
+          <div class="mission-complete-card__badge" id="completeBadgeRow">
+            <span class="mission-complete-card__badge-icon">🏅</span>
+            <span>شارة جديدة: <strong id="completeBadgeName">اسم الشارة</strong></span>
+          </div>
+
+          <button type="button" class="btn btn--primary btn--lg has-ripple" id="completeContinueBtn">
+            المتابعة إلى المهمة التالية
+          </button>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- ============================================= -->
+    <!-- BOTTOM BAR                                     -->
+    <!-- ============================================= -->
+    <footer class="mission-bottombar">
+      <div class="mission-bottombar__inner">
+        <a href="units.html?world=science" class="btn btn--ghost btn--sm" id="returnToUnitBtn">↩ العودة للوحدة</a>
+
+        <div class="mission-bottombar__controls">
+          <button type="button" class="btn btn--ghost btn--sm has-ripple" id="homeMissionBtn" title="العودة إلى المهمة 1">🏠 البداية</button>
+          <button type="button" class="btn btn--secondary btn--sm has-ripple" id="prevMissionBtn">◀ المهمة السابقة</button>
+          <button type="button" class="btn btn--ghost btn--sm has-ripple" id="saveProgressBtn">💾 حفظ التقدم</button>
+          <button type="button" class="btn btn--primary btn--sm has-ripple" id="nextMissionBtn">المهمة التالية ▶</button>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Core Gamification System (provides addXP/addCoins/unlockBadge
+       used by this lesson's quiz, drag-drop, and mission rewards) -->
+  <!-- PWA: offline app-shell caching -->
+  <script src="js/pwa.js" defer></script>
+  <script src="js/gamification.js" defer></script>
+  <script src="js/progress.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <!-- Final Achievement Certificate (shown at 100% lesson completion) -->
+  <script src="js/certificate.js" defer></script>
+  <script src="js/lesson1.js" defer></script>
+  <!-- EduBot AI companion -->
+  <script src="js/edubot.js" defer></script>
+</body>
+</html>

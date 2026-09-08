@@ -1,0 +1,271 @@
+/* =================================================================
+   EDUVERSE — EDUBOT AI COMPANION WIDGET
+   Shared across every page. Builds on the existing design tokens in
+   css/style.css (colors, radii, shadows) — no tokens redefined here.
+   Structure: floating avatar button (always visible) + an expandable
+   speech-bubble panel above it (hint / celebrate / encourage / say).
+   ================================================================= */
+
+.edubot {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  z-index: 1200;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  font-family: var(--font-body);
+}
+
+/* -----------------------------------------------------------------
+   FLOATING AVATAR BUTTON
+   ----------------------------------------------------------------- */
+.edubot__avatar-btn {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: var(--shadow-lg);
+  border: 3px solid #fff;
+  padding: 0;
+  overflow: visible;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  animation: edubotFloat 3.2s ease-in-out infinite;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.edubot__avatar-btn:hover,
+.edubot__avatar-btn:focus-visible {
+  box-shadow: var(--shadow-lg), 0 0 0 6px rgba(58,123,255,0.14);
+}
+.edubot__avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+.edubot__avatar-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid var(--cyan);
+  opacity: 0;
+  animation: edubotPulseRing 2.6s ease-out infinite;
+}
+.edubot__badge-dot {
+  position: absolute;
+  top: -2px;
+  inset-inline-end: -2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--orange);
+  border: 2px solid #fff;
+  opacity: 0;
+  transform: scale(0);
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+.edubot.has-unread .edubot__badge-dot {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@keyframes edubotFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes edubotPulseRing {
+  0% { transform: scale(1); opacity: 0.55; }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+
+/* -----------------------------------------------------------------
+   SPEECH BUBBLE PANEL
+   ----------------------------------------------------------------- */
+.edubot__panel {
+  width: min(320px, calc(100vw - 40px));
+  background: #fff;
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-soft);
+  padding: 18px 18px 16px;
+  position: relative;
+  transform-origin: bottom left;
+
+  /* hidden by default; JS toggles .is-open */
+  opacity: 0;
+  transform: scale(0.85) translateY(10px);
+  pointer-events: none;
+  transition: opacity 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.edubot__panel.is-open {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  pointer-events: auto;
+}
+
+/* Speech-bubble pointer, connecting the panel down to the avatar */
+.edubot__panel::after {
+  content: "";
+  position: absolute;
+  bottom: -9px;
+  left: 28px;
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  border-inline-end: 1px solid var(--border-soft);
+  border-bottom: 1px solid var(--border-soft);
+  transform: rotate(45deg);
+}
+
+.edubot__panel-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.edubot__panel-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
+}
+.edubot__panel-name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--ink);
+  line-height: 1.1;
+}
+.edubot__panel-tagline {
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+}
+.edubot__panel-close {
+  margin-inline-start: auto;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+.edubot__panel-close:hover { background: var(--bg-soft); color: var(--ink); }
+
+/* Close button now owns the header's auto-margin (Play/Mute moved
+   below the message, see .edubot__panel-voice-controls). */
+.edubot__panel-close { margin-inline-start: auto; }
+
+/* -----------------------------------------------------------------
+   VOICE CONTROLS — Play (replay the Arabic speech) / Mute (toggle
+   auto-speech and sound effects). Fixed-size pill buttons so toggling
+   the label/icon never shifts surrounding layout.
+   ----------------------------------------------------------------- */
+.edubot__panel-voice-controls {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.edubot__panel-voice-btn {
+  flex: 1;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border-soft);
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.edubot__panel-voice-btn:hover { background: rgba(58,123,255,0.1); color: var(--blue); border-color: var(--blue); }
+.edubot__panel-voice-btn[aria-pressed="true"] { background: rgba(220,38,38,0.08); color: #DC2626; border-color: rgba(220,38,38,0.3); }
+
+.edubot__panel-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-bottom: 8px;
+}
+.edubot__panel-tag--welcome  { background: rgba(58,123,255,0.1);  color: var(--blue); }
+.edubot__panel-tag--hint     { background: rgba(255,159,69,0.14); color: #C97A2E; }
+.edubot__panel-tag--celebrate{ background: rgba(34,211,238,0.14); color: #0E93A8; }
+.edubot__panel-tag--encourage{ background: rgba(139,92,246,0.1);  color: var(--purple); }
+
+.edubot__panel-message {
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--ink);
+}
+.edubot__panel-message--ar {
+  direction: rtl;
+  text-align: right;
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border-soft);
+  color: var(--ink-soft);
+  font-size: 0.86rem;
+}
+
+/* -----------------------------------------------------------------
+   CONVERSATION PLAYER — choice chips + continue button
+   ----------------------------------------------------------------- */
+.edubot__panel-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.edubot__choice-chip {
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--grad-primary);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.edubot__choice-chip:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+.edubot__panel-continue {
+  margin-top: 12px;
+  width: 100%;
+  padding: 9px;
+  border-radius: 999px;
+  background: var(--bg-soft);
+  color: var(--blue);
+  font-weight: 700;
+  font-size: 0.85rem;
+  border: 1px solid var(--border-soft);
+  transition: background 0.2s ease;
+}
+.edubot__panel-continue:hover { background: rgba(58,123,255,0.1); }
+
+/* -----------------------------------------------------------------
+   RESPONSIVE
+   ----------------------------------------------------------------- */
+@media (max-width: 480px) {
+  .edubot { left: 14px; bottom: 14px; }
+  .edubot__avatar-btn { width: 56px; height: 56px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .edubot__avatar-btn { animation: none; }
+  .edubot__avatar-ring { animation: none; opacity: 0; }
+}

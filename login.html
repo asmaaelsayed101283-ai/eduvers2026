@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تسجيل الدخول | EduVerse</title>
+  <meta name="description" content="سجّل الدخول إلى EduVerse وابدأ رحلتك التعليمية" />
+  <meta name="theme-color" content="#3A7BFF" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/login.css" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/logo/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/images/logo/favicon-16.png" />
+  <link rel="apple-touch-icon" href="assets/images/logo/apple-touch-icon.png" />
+</head>
+<body>
+
+  <div class="page-loader" aria-hidden="true">
+    <img src="assets/images/logo/logo-icon-128.png" alt="" class="page-loader__logo" />
+  </div>
+
+  <section class="auth-page">
+    <div class="auth-page__bg" aria-hidden="true"></div>
+
+    <div class="auth-card">
+      <a href="index.html" class="auth-card__brand">
+        <img src="assets/images/logo/logo-full.jpg" alt="EduVerse" class="auth-card__logo" />
+      </a>
+
+      <div class="auth-role-toggle" id="authRoleToggle" role="tablist">
+        <button type="button" class="auth-role-toggle__btn is-active" data-role="student" role="tab" aria-selected="true">🚀 طالب</button>
+        <button type="button" class="auth-role-toggle__btn" data-role="teacher" role="tab" aria-selected="false">🧑‍🏫 معلم</button>
+      </div>
+
+      <!-- STUDENT LOGIN -->
+      <div id="studentLoginPanel">
+        <h1 class="auth-card__title">أهلًا بك في EduVerse!</h1>
+        <p class="auth-card__sub">أدخل اسمك لنبدأ رحلتك التعليمية</p>
+
+        <form id="studentLoginForm" class="auth-form">
+          <label class="td-field">
+            <span>اسمك</span>
+            <input type="text" id="studentNameInput" placeholder="مثال: سارة أحمد" required autocomplete="name" />
+          </label>
+
+          <label class="td-field">
+            <span>الصف الدراسي</span>
+            <select id="studentGradeInput">
+              <!-- options injected by js/grades.js via js/auth-page.js -->
+            </select>
+          </label>
+
+          <div class="auth-avatar-picker" id="avatarPicker" aria-label="اختر أفاتار">
+            <button type="button" class="auth-avatar-picker__opt is-active" data-avatar="🧑‍🚀">🧑‍🚀</button>
+            <button type="button" class="auth-avatar-picker__opt" data-avatar="🦸">🦸</button>
+            <button type="button" class="auth-avatar-picker__opt" data-avatar="🧑‍🔬">🧑‍🔬</button>
+            <button type="button" class="auth-avatar-picker__opt" data-avatar="🐼">🐼</button>
+            <button type="button" class="auth-avatar-picker__opt" data-avatar="🦊">🦊</button>
+          </div>
+
+          <button type="submit" class="btn btn--primary btn--lg has-ripple auth-form__submit">ابدأ المغامرة ←</button>
+        </form>
+      </div>
+
+      <!-- TEACHER LOGIN (hands off to teacher-dashboard.html's own form) -->
+      <div id="teacherLoginPanel" hidden>
+        <h1 class="auth-card__title">أهلًا أستاذ/ة!</h1>
+        <p class="auth-card__sub">تسجيل دخول المعلم متاح من لوحة تحكم المعلم مباشرة</p>
+        <a href="teacher-dashboard.html" class="btn btn--primary btn--lg has-ripple auth-form__submit">الانتقال إلى لوحة تحكم المعلم ←</a>
+      </div>
+
+      <p class="auth-card__note">⚠️ بيانات تجريبية للعرض فقط — لا يوجد نظام مصادقة حقيقي بعد.</p>
+      <a href="index.html" class="auth-card__back">↩ العودة إلى الموقع</a>
+    </div>
+  </section>
+
+  <!-- PWA: offline app-shell caching -->
+  <script src="js/pwa.js" defer></script>
+  <script src="js/gamification.js" defer></script>
+  <script src="js/grades.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/auth-page.js" defer></script>
+</body>
+</html>

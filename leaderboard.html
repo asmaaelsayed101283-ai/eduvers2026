@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>المتصدرون | EduVerse</title>
+  <meta name="description" content="EduVerse - منصة واحدة... ومغامرات تعلم لا تنتهي" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/edubot.css" />
+  <link rel="stylesheet" href="css/leaderboard.css" />
+
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#3A7BFF" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/logo/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/images/logo/favicon-16.png" />
+  <link rel="apple-touch-icon" href="assets/images/logo/apple-touch-icon.png" />
+</head>
+<body class="page-transition" data-edubot-context="leaderboard" data-auth-required="student">
+
+  <div class="page-loader" aria-hidden="true">
+    <img src="assets/images/logo/logo-icon-128.png" alt="" class="page-loader__logo" />
+  </div>
+
+  <!-- ============================================= -->
+  <!-- NAVBAR (identical component to other pages)    -->
+  <!-- ============================================= -->
+  <header class="navbar" id="navbar">
+    <div class="container navbar__inner">
+      <a href="index.html" class="navbar__brand">
+        <span class="navbar__logo" aria-hidden="true">
+          <img src="assets/images/logo/logo-icon-64.png" alt="" class="navbar__logo-img" width="34" height="34" />
+        </span>
+        <span class="navbar__title">EduVerse</span>
+      </a>
+
+      <nav class="navbar__links" id="navLinks">
+        <a href="index.html#top" class="navbar__link">الرئيسية</a>
+        <a href="learning-worlds.html" class="navbar__link">عوالم التعلّم</a>
+        <a href="gamification.html" class="navbar__link">الإنجازات</a>
+        <a href="leaderboard.html" class="navbar__link is-active">المتصدرون</a>
+        <a href="gamification.html#certificates" class="navbar__link">الشهادات</a>
+        <a href="index.html#about" class="navbar__link">عن المنصة</a>
+        <a href="index.html#contact" class="navbar__link">تواصل معنا</a>
+      </nav>
+
+      <div class="navbar__actions">
+        <a href="teacher-dashboard.html" class="btn btn--ghost btn--sm">دخول المعلم</a>
+        <a href="login.html" class="btn btn--primary btn--sm">دخول الطالب</a>
+      </div>
+
+      <button class="navbar__toggle" id="navToggle" aria-label="فتح القائمة" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="leaderboard-hero">
+      <div class="container">
+        <span class="eyebrow eyebrow--light reveal">✦ المتصدرون</span>
+        <h1 class="reveal">من في القمة هذا الأسبوع؟</h1>
+        <p class="reveal">كل نقطة خبرة تجمعها ترفعك في الترتيب — تنافس مع زملائك في EduVerse!</p>
+      </div>
+    </section>
+
+    <div class="leaderboard-wrap">
+      <p class="my-rank-chip" id="myRankChip">جارٍ حساب ترتيبك...</p>
+      <ul class="leaderboard-list" id="leaderboardList" aria-live="polite">
+        <!-- rows injected by js/leaderboard.js -->
+      </ul>
+    </div>
+  </main>
+
+  <!-- ============================================= -->
+  <!-- FOOTER (identical component to other pages)    -->
+  <!-- ============================================= -->
+  <footer class="footer" id="contact">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <span class="navbar__logo" aria-hidden="true">
+          <img src="assets/images/logo/logo-icon-64.png" alt="" class="navbar__logo-img" width="30" height="30" />
+        </span>
+        <span class="navbar__title navbar__title--footer">EduVerse</span>
+      </div>
+
+      <nav class="footer__links">
+        <a href="index.html#top">الرئيسية</a>
+        <a href="learning-worlds.html">عوالم التعلّم</a>
+        <a href="gamification.html">الإنجازات</a>
+        <a href="login.html">تسجيل الدخول</a>
+      </nav>
+
+      <div class="footer__contact">
+        <p>تواصل معنا: info@eduverse.app</p>
+        <p>© 2026 EduVerse. جميع الحقوق محفوظة.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- PWA: offline app-shell caching -->
+  <script src="js/pwa.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/gamification.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/leaderboard.js" defer></script>
+  <!-- EduBot AI companion -->
+  <script src="js/edubot.js" defer></script>
+</body>
+</html>

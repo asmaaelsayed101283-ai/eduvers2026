@@ -1,0 +1,798 @@
+/* =================================================================
+   EDUVERSE — LESSON ENGINE STYLESHEET
+   Builds on shared tokens from css/style.css (colors, fonts, .btn,
+   .has-ripple/.ripple). This file is page-specific to the mission
+   player "app mode" layout: top bar, mission stage, bottom bar,
+   and the mission-complete celebration overlay.
+   ================================================================= */
+
+/* -----------------------------------------------------------------
+   1. SHELL LAYOUT
+   Full-height flex column: top bar / scrollable stage / bottom bar.
+   ----------------------------------------------------------------- */
+html, body.lesson-mode { height: 100%; }
+body.lesson-mode {
+  background: var(--bg-soft);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* the mission stage itself scrolls, not the page */
+}
+
+.lesson-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* -----------------------------------------------------------------
+   2. TOP BAR
+   ----------------------------------------------------------------- */
+.mission-topbar {
+  --w1: var(--blue);
+  --w2: var(--purple);
+  background: linear-gradient(120deg, var(--w1), var(--w2));
+  box-shadow: var(--shadow-md);
+  z-index: 20;
+}
+
+.mission-topbar__inner {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr auto;
+  align-items: center;
+  gap: 20px;
+  padding: 14px 28px;
+}
+
+.mission-topbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+  min-width: 0;
+}
+.mission-topbar__subject-icon {
+  width: 42px; height: 42px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.18);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+.mission-topbar__lesson-info { display: flex; flex-direction: column; min-width: 0; }
+.mission-topbar__lesson-name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.98rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mission-topbar__mission-label { font-size: 0.78rem; color: rgba(255,255,255,0.82); }
+
+.mission-topbar__progress { display: flex; flex-direction: column; gap: 8px; }
+.mission-topbar__bar {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.25);
+  overflow: hidden;
+}
+.mission-topbar__bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--orange), #fff);
+  transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.mission-topbar__dots { display: flex; justify-content: center; gap: 8px; }
+.mission-topbar__dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.35);
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+.mission-topbar__dot.is-done { background: #fff; }
+.mission-topbar__dot.is-current { background: #fff; transform: scale(1.35); box-shadow: 0 0 0 4px rgba(255,255,255,0.3); }
+
+.mission-topbar__stats { display: flex; gap: 10px; }
+.topbar-chip {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.16);
+  color: #fff;
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.topbar-chip__icon { font-size: 1rem; }
+
+/* -----------------------------------------------------------------
+   3. MISSION STAGE
+   ----------------------------------------------------------------- */
+.mission-stage {
+  position: relative;
+  flex: 1;
+  overflow-y: auto;
+  padding: 40px 20px 60px;
+}
+
+.mission-stage__bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--bg-soft);
+  pointer-events: none;
+}
+.mission-stage__shape {
+  position: absolute;
+  font-size: 1.8rem;
+  opacity: 0.16;
+  animation: floaty 5s ease-in-out infinite;
+}
+
+/* --- Mission card (the reusable template) --- */
+.mission-content { display: flex; justify-content: center; }
+
+.mission-card {
+  --w1: var(--blue);
+  --w2: var(--purple);
+  width: 100%;
+  max-width: 760px;
+  animation: missionIn 0.5s ease both;
+}
+@keyframes missionIn {
+  from { opacity: 0; transform: translateY(18px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.mission-card__header { text-align: center; margin-bottom: 22px; }
+.mission-card__badge {
+  display: inline-block;
+  background: linear-gradient(120deg, var(--w1), var(--w2));
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.78rem;
+  padding: 5px 16px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+.mission-card__title { font-size: clamp(1.4rem, 2.6vw, 1.9rem); margin-bottom: 10px; }
+.mission-card__objective {
+  color: var(--ink-soft);
+  font-size: 0.98rem;
+  background: rgba(58,123,255,0.06);
+  display: inline-block;
+  padding: 10px 18px;
+  border-radius: var(--r-sm);
+}
+.mission-card__objective strong { color: var(--ink); }
+
+.mission-card__illustration {
+  height: 150px;
+  border-radius: var(--r-lg);
+  background: linear-gradient(135deg, var(--w1), var(--w2));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 3.4rem;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+.mission-card__illustration span { animation: floaty 3s ease-in-out infinite; }
+
+/* --- Mission steps indicator (Learn / Practice / Challenge) --- */
+.mission-steps {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+.mission-step {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 0.85rem; font-weight: 700; color: var(--ink-soft);
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-soft);
+}
+.mission-step__icon { font-size: 1rem; }
+
+/* --- Reusable content blocks: interactive / activity / challenge --- */
+.mission-block {
+  background: var(--card-bg);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-md);
+  padding: 22px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow-sm);
+}
+.mission-block h3 { font-size: 1rem; margin-bottom: 10px; }
+
+.placeholder-box {
+  border: 2px dashed var(--border-soft);
+  border-radius: var(--r-sm);
+  padding: 26px 18px;
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  background: var(--bg-soft);
+}
+
+.mission-summary {
+  background: rgba(139,92,246,0.06);
+  border: 1px solid rgba(139,92,246,0.16);
+  border-radius: var(--r-md);
+  padding: 22px;
+  margin-bottom: 26px;
+}
+.mission-summary h3 { font-size: 1rem; margin-bottom: 8px; }
+.mission-summary p { color: var(--ink-soft); font-size: 0.9rem; }
+
+.mission-card__next-inline {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+/* -----------------------------------------------------------------
+   4. MISSION COMPLETE OVERLAY
+   ----------------------------------------------------------------- */
+.mission-complete-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(28, 27, 51, 0.55);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.mission-complete-overlay.is-active { opacity: 1; pointer-events: auto; }
+
+.mission-complete-card {
+  position: relative;
+  background: var(--card-bg);
+  border-radius: var(--r-lg);
+  padding: 40px 36px;
+  max-width: 420px;
+  width: 90%;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  transform: scale(0.85);
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+}
+.mission-complete-overlay.is-active .mission-complete-card {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.mission-complete-card__icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 8px;
+  animation: iconPulse 1.6s ease-in-out infinite;
+}
+.mission-complete-card__title { font-size: 1.4rem; margin-bottom: 6px; }
+.mission-complete-card__sub { color: var(--ink-soft); font-size: 0.92rem; margin-bottom: 22px; }
+
+.mission-complete-card__rewards {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.reward-chip {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border-soft);
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.mission-complete-card__badge {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: rgba(255,159,69,0.1);
+  border: 1px solid rgba(255,159,69,0.3);
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  margin-bottom: 26px;
+}
+.mission-complete-card__badge-icon { font-size: 1.2rem; }
+
+/* confetti: small emoji-free dots bursting outward, purely decorative */
+.mission-complete-card__confetti { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.confetti-dot {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 8px; height: 8px;
+  border-radius: 2px;
+  background: var(--c, var(--orange));
+  animation: confettiBurst 0.9s ease-out forwards;
+}
+@keyframes confettiBurst {
+  to {
+    transform: translate(var(--tx), var(--ty)) rotate(var(--rot));
+    opacity: 0;
+  }
+}
+
+@keyframes iconPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* -----------------------------------------------------------------
+   5. BOTTOM BAR
+   ----------------------------------------------------------------- */
+.mission-bottombar {
+  background: var(--card-bg);
+  border-top: 1px solid var(--border-soft);
+  box-shadow: 0 -6px 20px rgba(28,27,51,0.05);
+  z-index: 20;
+}
+.mission-bottombar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 28px;
+  flex-wrap: wrap;
+}
+.mission-bottombar__controls { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* A tiny toast for the "Save Progress" acknowledgement */
+.save-toast {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  background: var(--ink);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 60;
+}
+.save-toast.is-visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* -----------------------------------------------------------------
+   6. RESPONSIVE
+   ----------------------------------------------------------------- */
+@media (max-width: 900px) {
+  .mission-topbar__inner { grid-template-columns: 1fr; gap: 10px; }
+  .mission-topbar__stats { justify-content: center; flex-wrap: wrap; }
+  .mission-topbar__lesson-info { align-items: center; text-align: center; }
+  .mission-topbar__brand { justify-content: center; }
+}
+
+@media (max-width: 640px) {
+  .mission-bottombar__inner { flex-direction: column; align-items: stretch; }
+  .mission-bottombar__controls { justify-content: stretch; }
+  .mission-bottombar__controls .btn { flex: 1; }
+  .mission-steps { flex-wrap: wrap; }
+  .mission-stage { padding: 24px 14px 50px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mission-card, .confetti-dot, .mission-complete-card__icon { animation: none !important; }
+}
+
+/* -----------------------------------------------------------------
+   7. TEACHER-AUTHORED CONTENT BLOCKS
+   Added when connecting the Lesson Engine to real ContentStore
+   lessons (Teacher Dashboard). Same tokens/spacing as the rest of
+   this file — not a new design language, just two new content shapes
+   `renderBlock()` can now produce: an objectives checklist and a
+   vocabulary flip-card grid (a small, self-contained "game" built
+   straight from the lesson's own vocabulary list).
+   ----------------------------------------------------------------- */
+.objectives-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.objectives-list li {
+  background: var(--bg-soft);
+  border-radius: var(--r-sm);
+  padding: 10px 14px;
+  font-size: 0.92rem;
+}
+
+.vocab-flip-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 14px;
+}
+.vocab-flip-card {
+  position: relative;
+  height: 140px;
+  cursor: pointer;
+  perspective: 900px;
+}
+.vocab-flip-card__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-style: preserve-3d;
+}
+.vocab-flip-card.is-flipped .vocab-flip-card__inner { transform: rotateY(180deg); }
+.vocab-flip-card__face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-align: center;
+  padding: 12px;
+  border-radius: var(--r-md);
+  font-weight: 700;
+  font-size: 1rem;
+  backface-visibility: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.vocab-flip-card__face--front {
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  color: #fff;
+  direction: ltr; /* vocabulary terms are usually English/Latin script */
+}
+.vocab-flip-card__face--back {
+  background: var(--bg-soft);
+  color: var(--ink);
+  transform: rotateY(180deg);
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+.vocab-flip-card__image { width: 100%; max-height: 44px; object-fit: contain; border-radius: 6px; }
+.vocab-flip-card__pronunciation { font-size: 0.72rem; color: var(--ink-soft); font-style: normal; direction: ltr; }
+.vocab-flip-card .read-aloud-btn {
+  width: 26px; height: 26px; font-size: 0.8rem;
+  background: rgba(255,255,255,0.25);
+}
+.vocab-flip-card__face--back .read-aloud-btn { background: var(--card-bg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .vocab-flip-card__inner { transition: none; }
+}
+
+/* -----------------------------------------------------------------
+   LESSON EXPERIENCE REDESIGN — the student lesson page, upgraded:
+   Hero Banner, Warm-up, Learning Cards, Gallery, Concept blocks,
+   Examples, Mind Map, Key Points, dark mode. Every section here is
+   only ever rendered by js/lesson-engine.js when the teacher's own
+   lesson actually has that kind of content — nothing below is shown
+   as an empty placeholder.
+   ----------------------------------------------------------------- */
+
+/* Small reusable "read aloud" (Web Speech API) button used across
+   several card types below. */
+.read-aloud-btn {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--bg-soft);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.read-aloud-btn:hover { background: rgba(58,123,255,0.15); }
+
+.coming-soon-card {
+  text-align: center;
+  padding: 26px 16px;
+  border-radius: var(--r-md);
+  background: var(--bg-soft);
+  color: var(--ink-soft);
+  font-weight: 700;
+}
+
+/* -----------------------------------------------------------------
+   HERO BANNER (lesson-level, persistent across all missions)
+   ----------------------------------------------------------------- */
+.lesson-hero-banner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 20px;
+  max-width: 760px;
+  margin: 0 auto 18px;
+  padding: 18px 22px;
+  border-radius: var(--r-lg);
+  background: linear-gradient(120deg, color-mix(in srgb, var(--w1, var(--blue)) 92%, transparent), color-mix(in srgb, var(--w2, var(--purple)) 92%, transparent));
+  color: #fff;
+  box-shadow: var(--shadow-lg);
+  animation: heroBannerIn 0.5s ease both;
+}
+@keyframes heroBannerIn { from { opacity: 0; transform: translateY(-14px); } to { opacity: 1; transform: translateY(0); } }
+
+.lesson-hero__illustration {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.22);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem;
+  flex-shrink: 0;
+  animation: heroFloat 3.5s ease-in-out infinite;
+}
+@keyframes heroFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+.lesson-hero__body { min-width: 0; }
+.lesson-hero__eyebrow { font-size: 0.75rem; opacity: 0.85; font-weight: 700; }
+.lesson-hero__title { font-size: clamp(1.1rem, 3vw, 1.5rem); margin: 2px 0 8px; }
+.lesson-hero__meta { display: flex; flex-wrap: wrap; gap: 8px; }
+.lesson-hero__chip {
+  background: rgba(255,255,255,0.2);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.lesson-hero__progress { position: relative; width: 64px; height: 64px; flex-shrink: 0; }
+.lesson-hero__ring { width: 100%; height: 100%; transform: rotate(-90deg); }
+.lesson-hero__ring-track { fill: none; stroke: rgba(255,255,255,0.25); stroke-width: 8; }
+.lesson-hero__ring-fill { fill: none; stroke: #fff; stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 0.6s ease; }
+.lesson-hero__progress-label {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 0.85rem;
+}
+
+@media (max-width: 640px) {
+  .lesson-hero-banner { grid-template-columns: auto 1fr; }
+  .lesson-hero__progress { display: none; }
+}
+
+/* -----------------------------------------------------------------
+   WARM-UP — EduBot's animated intro, opens every lesson
+   ----------------------------------------------------------------- */
+.warmup-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: linear-gradient(120deg, rgba(58,123,255,0.08), rgba(139,92,246,0.08));
+  border-radius: var(--r-md);
+  padding: 16px 18px;
+}
+.warmup-card__bot {
+  font-size: 2.4rem;
+  animation: warmupBounce 1.8s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes warmupBounce { 0%, 100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-8px) rotate(4deg); } }
+.warmup-card__bubble strong { display: block; margin-bottom: 4px; }
+.warmup-card__bubble p { margin: 0; color: var(--ink-soft); font-size: 0.92rem; }
+
+/* -----------------------------------------------------------------
+   LEARNING CARDS
+   ----------------------------------------------------------------- */
+.learning-cards {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scroll-snap-type: x proximity;
+}
+.learning-card {
+  scroll-snap-align: start;
+  flex: 0 0 min(260px, 80vw);
+  background: var(--card-bg);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-md);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: cardPopIn 0.4s ease both;
+}
+.learning-card:nth-child(2) { animation-delay: 0.05s; }
+.learning-card:nth-child(3) { animation-delay: 0.1s; }
+.learning-card:nth-child(4) { animation-delay: 0.15s; }
+@keyframes cardPopIn { from { opacity: 0; transform: scale(0.94); } to { opacity: 1; transform: scale(1); } }
+.learning-card__icon { font-size: 1.6rem; }
+.learning-card__text { margin: 0; font-size: 0.92rem; line-height: 1.6; flex: 1; }
+.learning-card__actions { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.learning-card__done { font-size: 0.8rem; color: var(--blue); font-weight: 700; }
+
+/* -----------------------------------------------------------------
+   IMAGE GALLERY
+   ----------------------------------------------------------------- */
+.lesson-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+.lesson-gallery__item { border-radius: var(--r-md); overflow: hidden; box-shadow: var(--shadow-sm); }
+.lesson-gallery__item img { width: 100%; height: 130px; object-fit: cover; display: block; transition: filter 0.3s ease; }
+.lesson-gallery__item:hover img { filter: brightness(1.06); }
+
+/* -----------------------------------------------------------------
+   MODERN AUDIO PLAYER
+   ----------------------------------------------------------------- */
+.modern-audio-player {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--bg-soft);
+  border-radius: var(--r-md);
+  padding: 14px 16px;
+}
+.modern-audio-player__icon { font-size: 1.6rem; }
+.modern-audio-player audio { flex: 1; width: 100%; }
+
+/* -----------------------------------------------------------------
+   CONCEPT / GRAMMAR EXPLANATION BLOCK
+   ----------------------------------------------------------------- */
+.concept-block {
+  background: linear-gradient(135deg, rgba(139,92,246,0.08), rgba(34,211,238,0.08));
+  border-inline-start: 4px solid var(--purple);
+  border-radius: var(--r-md);
+  padding: 16px 18px;
+}
+.concept-block__line {
+  margin: 0 0 10px;
+  font-size: 0.94rem;
+  line-height: 1.7;
+  opacity: 0;
+  animation: conceptLineIn 0.5s ease forwards;
+  animation-delay: var(--d, 0s);
+}
+.concept-block__line:last-child { margin-bottom: 0; }
+@keyframes conceptLineIn { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
+[dir="rtl"] .concept-block__line { animation-name: conceptLineInRtl; }
+@keyframes conceptLineInRtl { from { opacity: 0; transform: translateX(8px); } to { opacity: 1; transform: translateX(0); } }
+
+/* -----------------------------------------------------------------
+   EXAMPLES
+   ----------------------------------------------------------------- */
+.examples-grid { display: flex; flex-direction: column; gap: 10px; }
+.example-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-md);
+  padding: 12px 16px;
+}
+.example-card__num {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--orange), var(--blue));
+  color: #fff;
+  font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.85rem;
+}
+.example-card p { margin: 0; flex: 1; font-size: 0.9rem; }
+
+/* -----------------------------------------------------------------
+   MIND MAP (interactive summary)
+   ----------------------------------------------------------------- */
+.mindmap { text-align: center; padding: 10px 0; }
+.mindmap__hub {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 140px;
+  padding: 14px 22px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  color: #fff;
+  font-weight: 800;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 18px;
+  animation: hubPulse 2.4s ease-in-out infinite;
+}
+@keyframes hubPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(58,123,255,0.35); } 50% { box-shadow: 0 0 0 10px rgba(58,123,255,0); } }
+.mindmap__branches {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+.mindmap__node {
+  background: var(--bg-soft);
+  border: 2px solid var(--border-soft);
+  border-radius: var(--r-md);
+  padding: 10px 16px;
+  font-size: 0.86rem;
+  max-width: 220px;
+  opacity: 0;
+  animation: nodeFadeIn 0.45s ease forwards;
+  animation-delay: var(--d, 0s);
+}
+@keyframes nodeFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* -----------------------------------------------------------------
+   KEY POINTS
+   ----------------------------------------------------------------- */
+.keypoints-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+.keypoint-card {
+  background: var(--card-bg);
+  border-radius: var(--r-md);
+  padding: 14px;
+  border-inline-start: 4px solid var(--kp-color, var(--blue));
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.keypoint-card__icon { font-size: 1.1rem; }
+.keypoint-card p { margin: 0; font-size: 0.88rem; line-height: 1.6; }
+
+/* -----------------------------------------------------------------
+   DARK MODE TOGGLE + THEME OVERRIDE
+   Re-declaring the same custom-property names already used
+   throughout css/style.css / css/lesson-engine.css / css/lesson1.css
+   is enough to re-theme the whole page — no other rule changes.
+   ----------------------------------------------------------------- */
+.theme-toggle-btn {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--bg-soft);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+}
+.theme-toggle-btn:hover { background: rgba(58,123,255,0.15); }
+
+body[data-theme="dark"] {
+  --bg: #0F1223;
+  --bg-soft: #1A1E36;
+  --card-bg: #1E2340;
+  --ink: #EDEFFB;
+  --ink-soft: #A7ACD1;
+  --border-soft: #2E3357;
+  background: var(--bg);
+  color: var(--ink);
+}
+body[data-theme="dark"] .mission-stage,
+body[data-theme="dark"] .lesson-shell { background: var(--bg); }
+body[data-theme="dark"] .mission-topbar,
+body[data-theme="dark"] .mission-bottombar { background: var(--card-bg); border-color: var(--border-soft); }
+body[data-theme="dark"] .quiz-option { background: var(--card-bg); color: var(--ink); }
+body[data-theme="dark"] .vocab-flip-card__face--back { background: var(--card-bg); color: var(--ink); }
+
+@media (prefers-color-scheme: dark) {
+  body:not([data-theme="light"]) {
+    --bg: #0F1223;
+    --bg-soft: #1A1E36;
+    --card-bg: #1E2340;
+    --ink: #EDEFFB;
+    --ink-soft: #A7ACD1;
+    --border-soft: #2E3357;
+    background: var(--bg);
+    color: var(--ink);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lesson-hero-banner, .lesson-hero__illustration, .warmup-card__bot,
+  .learning-card, .concept-block__line, .mindmap__hub, .mindmap__node {
+    animation: none !important;
+  }
+}

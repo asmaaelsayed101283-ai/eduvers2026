@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>لوحة تحكم المعلم | EduVerse</title>
+  <meta name="description" content="EduVerse - منصة واحدة... ومغامرات تعلم لا تنتهي" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <!-- Shared design tokens (colors, fonts, buttons) — reused, not recreated -->
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- EduBot AI companion styles -->
+  <link rel="stylesheet" href="css/edubot.css" />
+  <!-- Teacher Dashboard-specific styles -->
+  <link rel="stylesheet" href="css/teacher-dashboard.css" />
+  <!-- Real playable games + virtual lab styles (previewed nowhere in
+       the dashboard itself, but shared so any inline preview reuses
+       the exact same look the student sees) -->
+  <link rel="stylesheet" href="css/games-engine.css" />
+
+  <!-- PWA manifest (installable app + Android-ready) -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#3A7BFF" />
+  <!-- Official EduVerse logo — favicon / app icon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/logo/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/images/logo/favicon-16.png" />
+  <link rel="apple-touch-icon" href="assets/images/logo/apple-touch-icon.png" />
+</head>
+<body class="td-body" data-edubot-context="teacher">
+
+  <!-- Branded page loader — pure CSS, fades itself out; see css/style.css -->
+  <div class="page-loader" aria-hidden="true">
+    <img src="assets/images/logo/logo-icon-128.png" alt="" class="page-loader__logo" />
+  </div>
+
+  <!--
+    ==================================================================
+    TEACHER DASHBOARD — ARCHITECTURE NOTE
+    ==================================================================
+    Everything here is client-side only (no backend/database/Firebase,
+    per the brief). All content lives in one in-memory JS store in
+    js/teacher-dashboard.js, mirrored to localStorage so a teacher's
+    demo content survives a page reload.
+
+    The data shapes (subjects, units, lessons, missions) are designed
+    to match what the rest of the platform already expects:
+      - a "subject" here = a Learning World card on learning-worlds.html
+      - a "unit"          = a Unit card on units.html
+      - a "lesson"'s missions = the mission list a Lesson Engine page renders
+    Wiring this dashboard's output into those pages automatically is a
+    future phase — for now, saving a subject shows a note confirming
+    that a matching Learning World would be generated from it.
+    ==================================================================
+  -->
+
+  <!-- ============================================= -->
+  <!-- TEACHER LOGIN VIEW                             -->
+  <!-- ============================================= -->
+  <section class="teacher-login" id="teacherLoginView">
+    <div class="teacher-login__bg" aria-hidden="true"></div>
+
+    <div class="teacher-login__card">
+      <a href="index.html" class="teacher-login__brand">
+        <img src="assets/images/logo/logo-full.jpg" alt="EduVerse" class="teacher-login__logo" />
+      </a>
+
+      <h1 class="teacher-login__title">تسجيل دخول المعلم</h1>
+      <p class="teacher-login__sub">أدخل بياناتك للوصول إلى لوحة تحكم المعلم</p>
+
+      <form class="teacher-login__form" id="teacherLoginForm">
+        <label class="td-field">
+          <span>البريد الإلكتروني</span>
+          <input type="email" placeholder="teacher@school.com" required />
+        </label>
+        <label class="td-field">
+          <span>كلمة المرور</span>
+          <input type="password" placeholder="••••••••" required />
+        </label>
+
+        <div class="teacher-login__row">
+          <label class="td-checkbox">
+            <input type="checkbox" checked />
+            <span>تذكرني</span>
+          </label>
+          <a href="#" class="teacher-login__forgot">نسيت كلمة المرور؟</a>
+        </div>
+
+        <button type="submit" class="btn btn--primary btn--lg has-ripple teacher-login__submit">دخول إلى اللوحة ←</button>
+      </form>
+
+      <p class="teacher-login__note">⚠️ بيانات تجريبية للعرض فقط — لا يوجد نظام مصادقة حقيقي بعد.</p>
+      <a href="index.html" class="teacher-login__back">↩ العودة إلى الموقع</a>
+    </div>
+  </section>
+
+  <!-- ============================================= -->
+  <!-- TEACHER DASHBOARD VIEW (hidden until login)    -->
+  <!-- ============================================= -->
+  <div class="td-shell" id="teacherDashboardView" hidden>
+
+    <!-- Sidebar -->
+    <aside class="td-sidebar">
+      <div class="td-sidebar__brand">
+        <span class="navbar__logo" aria-hidden="true">
+          <img src="assets/images/logo/logo-icon-64.png" alt="" class="navbar__logo-img" width="30" height="30" />
+        </span>
+        <span class="navbar__title">EduVerse</span>
+      </div>
+
+      <nav class="td-nav" id="tdNav">
+        <button type="button" class="td-nav__item is-active" data-panel="home">🏠 <span>الرئيسية</span></button>
+        <button type="button" class="td-nav__item" data-panel="profile">👤 <span>الملف الشخصي</span></button>
+        <button type="button" class="td-nav__item" data-panel="subjects">🧭 <span>إدارة المواد</span></button>
+        <button type="button" class="td-nav__item" data-panel="units">📦 <span>إدارة الوحدات</span></button>
+        <button type="button" class="td-nav__item" data-panel="lessons">📘 <span>إدارة الدروس</span></button>
+        <button type="button" class="td-nav__item" data-panel="uploads">📤 <span>رفع الملفات</span></button>
+        <button type="button" class="td-nav__item" data-panel="missions">🎯 <span>إعدادات المهام</span></button>
+        <button type="button" class="td-nav__item" data-panel="games">🕹️ <span>إعدادات الألعاب</span></button>
+      </nav>
+
+      <a href="index.html" class="td-sidebar__exit" id="teacherLogoutBtn">🚪 تسجيل الخروج</a>
+    </aside>
+
+    <!-- Main area -->
+    <div class="td-main">
+      <header class="td-topbar">
+        <h1 class="td-topbar__title" id="tdPanelTitle">الرئيسية</h1>
+        <div class="td-topbar__teacher" id="tdTopbarTeacher">
+          <span class="td-topbar__avatar" id="tdTopbarAvatar">🧑‍🏫</span>
+          <span id="tdTopbarName">معلّم/ة EduVerse</span>
+        </div>
+      </header>
+
+      <div class="td-content">
+
+        <!-- ===================== HOME PANEL ===================== -->
+        <section class="td-panel is-active" data-panel="home">
+          <div class="td-stats-grid" id="tdStatsGrid"></div>
+
+          <div class="td-card">
+            <h2>🕒 آخر الأنشطة</h2>
+            <ul class="td-activity-list" id="tdActivityList"></ul>
+          </div>
+        </section>
+
+        <!-- ===================== TEACHER PROFILE PANEL ===================== -->
+        <section class="td-panel" data-panel="profile">
+          <div class="td-panel-head">
+            <div>
+              <h2>الملف الشخصي للمعلّم/ة</h2>
+              <p>هذه البيانات تظهر في أعلى لوحة التحكم، ويتم حفظها تلقائيًا على هذا الجهاز</p>
+            </div>
+          </div>
+
+          <div class="td-card">
+            <div class="td-profile-header">
+              <span class="td-profile-avatar" id="profileAvatarPreview">🧑‍🏫</span>
+              <div>
+                <div class="td-profile-header__name" id="profileHeaderName">معلّم/ة EduVerse</div>
+                <div class="td-profile-header__role" id="profileHeaderRole">أضف بياناتك أدناه</div>
+              </div>
+            </div>
+
+            <label class="td-field">
+              <span>الصورة الرمزية</span>
+              <div class="td-emoji-picker" id="profileAvatarPicker"></div>
+            </label>
+
+            <div class="td-form-grid">
+              <label class="td-field">
+                <span>الاسم الكامل</span>
+                <input type="text" id="profileNameInput" placeholder="مثال: أ. سارة أحمد" />
+              </label>
+              <label class="td-field">
+                <span>البريد الإلكتروني</span>
+                <input type="email" id="profileEmailInput" placeholder="teacher@school.com" />
+              </label>
+            </div>
+
+            <div class="td-form-grid">
+              <label class="td-field">
+                <span>التخصص / المادة</span>
+                <input type="text" id="profileSubjectInput" placeholder="مثال: معلّم علوم" />
+              </label>
+              <label class="td-field">
+                <span>المدرسة</span>
+                <input type="text" id="profileSchoolInput" placeholder="مثال: مدرسة النور الإعدادية" />
+              </label>
+            </div>
+
+            <label class="td-field">
+              <span>نبذة مختصرة</span>
+              <textarea id="profileBioInput" placeholder="اكتب نبذة قصيرة عنك تظهر للطلاب أو الزملاء..."></textarea>
+            </label>
+
+            <div class="td-form-actions">
+              <button type="button" class="btn btn--primary btn--sm has-ripple" id="saveProfileBtn">💾 حفظ الملف الشخصي</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================== SUBJECTS PANEL ===================== -->
+        <section class="td-panel" data-panel="subjects">
+          <div class="td-panel-head">
+            <div>
+              <h2>إدارة المواد الدراسية</h2>
+              <p>كل مادة هنا تمثّل "عالم تعلّم" مستقلاً على المنصة</p>
+            </div>
+            <button type="button" class="btn btn--primary btn--sm has-ripple" id="addSubjectBtn">+ إضافة مادة</button>
+          </div>
+
+          <div class="td-table-wrap">
+            <table class="td-table">
+              <thead>
+                <tr>
+                  <th>المادة</th>
+                  <th>اللون</th>
+                  <th>عدد الوحدات</th>
+                  <th>عدد الدروس</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="subjectsTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ===================== UNITS PANEL ===================== -->
+        <section class="td-panel" data-panel="units">
+          <div class="td-panel-head">
+            <div>
+              <h2>إدارة الوحدات</h2>
+              <p>اختر مادة لعرض وحداتها وإدارتها</p>
+            </div>
+            <button type="button" class="btn btn--primary btn--sm has-ripple" id="addUnitBtn">+ إضافة وحدة</button>
+          </div>
+
+          <label class="td-field td-field--inline">
+            <span>المادة:</span>
+            <select id="unitsSubjectFilter"></select>
+          </label>
+
+          <div class="td-table-wrap">
+            <table class="td-table">
+              <thead>
+                <tr>
+                  <th>الوحدة</th>
+                  <th>المستوى</th>
+                  <th>الصف</th>
+                  <th>عدد الدروس</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="unitsTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ===================== LESSONS PANEL ===================== -->
+        <section class="td-panel" data-panel="lessons">
+          <div class="td-panel-head">
+            <div>
+              <h2>إدارة الدروس</h2>
+              <p>اختر وحدة لعرض دروسها وإدارتها</p>
+            </div>
+            <button type="button" class="btn btn--primary btn--sm has-ripple" id="addLessonBtn">+ إضافة درس</button>
+          </div>
+
+          <label class="td-field td-field--inline">
+            <span>المادة:</span>
+            <select id="lessonsSubjectFilter"></select>
+          </label>
+          <label class="td-field td-field--inline">
+            <span>الوحدة:</span>
+            <select id="lessonsUnitFilter"></select>
+          </label>
+
+          <div class="td-table-wrap">
+            <table class="td-table">
+              <thead>
+                <tr>
+                  <th>الدرس</th>
+                  <th>XP</th>
+                  <th>EduGems</th>
+                  <th>المستوى</th>
+                  <th>الصف</th>
+                  <th>الحالة</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="lessonsTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ===================== FILE UPLOAD PANEL ===================== -->
+        <section class="td-panel" data-panel="uploads">
+          <div class="td-panel-head">
+            <div>
+              <h2>رفع الملفات</h2>
+              <p>منطقة رفع فقط في هذه المرحلة — لن تتم معالجة الملفات بعد</p>
+            </div>
+          </div>
+
+          <div class="upload-grid" id="uploadGrid"></div>
+
+          <div class="td-card">
+            <h2>📁 الملفات المرفوعة في هذه الجلسة</h2>
+            <ul class="upload-file-list" id="uploadFileList">
+              <li class="upload-file-list__empty">لم يتم رفع أي ملفات بعد</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ===================== MISSION SETTINGS PANEL ===================== -->
+        <section class="td-panel" data-panel="missions">
+          <div class="td-panel-head">
+            <div>
+              <h2>إعدادات المهام</h2>
+              <p>اختر درسًا لضبط عدد مهامه وترتيبها وأيقوناتها ومكافآتها</p>
+            </div>
+          </div>
+
+          <label class="td-field td-field--inline">
+            <span>الدرس:</span>
+            <select id="missionsLessonFilter"></select>
+          </label>
+
+          <div class="td-card">
+            <div class="mission-settings__toolbar">
+              <span id="missionCountLabel">عدد المهام: 3</span>
+              <div class="mission-settings__count-controls">
+                <button type="button" class="btn btn--ghost btn--sm has-ripple" id="removeMissionBtn">− إزالة مهمة</button>
+                <button type="button" class="btn btn--ghost btn--sm has-ripple" id="addMissionBtn">+ إضافة مهمة</button>
+              </div>
+            </div>
+
+            <div id="missionsEditorList" class="missions-editor-list"></div>
+
+            <button type="button" class="btn btn--primary has-ripple" id="saveMissionsBtn">💾 حفظ إعدادات المهام</button>
+          </div>
+        </section>
+
+        <!-- ===================== GAME SETTINGS PANEL ===================== -->
+        <section class="td-panel" data-panel="games">
+          <div class="td-panel-head">
+            <div>
+              <h2>إعدادات الألعاب التفاعلية</h2>
+              <p>فعّل أو عطّل الآليات التفاعلية لهذا الدرس — دون تفعيل منطق الألعاب بعد</p>
+            </div>
+          </div>
+
+          <label class="td-field td-field--inline">
+            <span>الدرس:</span>
+            <select id="gamesLessonFilter"></select>
+          </label>
+
+          <div class="td-card">
+            <div class="game-toggles-grid" id="gameTogglesGrid"></div>
+            <button type="button" class="btn btn--primary has-ripple" id="saveGamesBtn">💾 حفظ إعدادات الألعاب</button>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================= -->
+  <!-- REUSABLE MODAL (Add/Edit Subject/Unit/Lesson)  -->
+  <!-- ============================================= -->
+  <div class="td-modal" id="teacherModal" hidden>
+    <div class="td-modal__backdrop" id="modalBackdrop"></div>
+    <div class="td-modal__card">
+      <button type="button" class="td-modal__close" id="modalCloseBtn" aria-label="إغلاق">✕</button>
+      <h2 class="td-modal__title" id="modalTitle">إضافة</h2>
+      <div class="td-modal__body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- ============================================= -->
+  <!-- TOAST (save confirmations)                     -->
+  <!-- ============================================= -->
+  <div class="td-toast" id="tdToast"></div>
+
+  <!-- PWA: offline app-shell caching -->
+  <script src="js/pwa.js" defer></script>
+  <script src="js/auth.js" defer></script>
+
+  <!-- Real playable games + dynamic Virtual Lab engines (shared with
+       the student-facing Lesson Engine) -->
+  <script src="js/games-engine.js" defer></script>
+  <script src="js/virtual-lab.js" defer></script>
+
+  <!-- Smart Lesson Generator: client-side document text extraction.
+       These are real third-party libraries loaded from a CDN (this is
+       a plain static site, not a Claude artifact, so CDN scripts work
+       normally in the deployed browser). Each is feature-detected in
+       js/lesson-generator.js, so a network hiccup here degrades to a
+       clear error message instead of a silent crash. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
+  <script src="js/lesson-generator.js" defer></script>
+  <script src="js/grades.js" defer></script>
+
+  <script src="js/teacher-dashboard.js" defer></script>
+  <!-- EduBot AI companion -->
+  <script src="js/edubot.js" defer></script>
+</body>
+</html>
