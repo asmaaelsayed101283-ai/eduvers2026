@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>نظام التحفيز | EduVerse</title>
+  <meta name="description" content="EduVerse - منصة واحدة... ومغامرات تعلم لا تنتهي" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <!-- Shared design tokens + navbar/footer/buttons — reused, not recreated -->
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- EduBot AI companion styles -->
+  <link rel="stylesheet" href="css/edubot.css" />
+  <!-- Gamification-specific styles -->
+  <link rel="stylesheet" href="css/gamification.css" />
+  <link rel="stylesheet" href="css/leaderboard.css" />
+
+  <!-- PWA manifest (installable app + Android-ready) -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#3A7BFF" />
+  <!-- Official EduVerse logo — favicon / app icon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/logo/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/images/logo/favicon-16.png" />
+  <link rel="apple-touch-icon" href="assets/images/logo/apple-touch-icon.png" />
+</head>
+<body data-edubot-context="gamification" data-auth-required="student">
+
+  <!-- Branded page loader — pure CSS, fades itself out; see css/style.css -->
+  <div class="page-loader" aria-hidden="true">
+    <img src="assets/images/logo/logo-icon-128.png" alt="" class="page-loader__logo" />
+  </div>
+
+  <!--
+    ==================================================================
+    CORE GAMIFICATION SYSTEM — ARCHITECTURE NOTE
+    ==================================================================
+    js/gamification.js is written as a standalone, importable module —
+    NOT page-specific logic. It exports functions like addXP(),
+    addCoins(), unlockBadge(), and subscribe() with real `export`
+    statements, so any future page (a lesson, a unit, a quiz) can do:
+
+        import { addXP, addCoins, unlockBadge } from './gamification.js';
+        addXP(50, 'mission-complete');
+
+    ...and this engine will handle leveling up, popups, and state for
+    them automatically. This page is a DEMO/SHOWCASE of that engine —
+    it renders the Profile Card, Level System, and Badge Gallery, and
+    provides test buttons that simulate what a lesson would trigger.
+    No subject is ever referenced by name in the engine itself.
+    ==================================================================
+  -->
+
+  <!-- ============================================= -->
+  <!-- NAVBAR (identical component to other pages)    -->
+  <!-- ============================================= -->
+  <header class="navbar" id="navbar">
+    <div class="container navbar__inner">
+      <a href="index.html" class="navbar__brand">
+        <span class="navbar__logo" aria-hidden="true">
+          <img src="assets/images/logo/logo-icon-64.png" alt="" class="navbar__logo-img" width="34" height="34" />
+        </span>
+        <span class="navbar__title">EduVerse</span>
+      </a>
+
+      <nav class="navbar__links" id="navLinks">
+        <a href="index.html#top" class="navbar__link">الرئيسية</a>
+        <a href="learning-worlds.html" class="navbar__link">عوالم التعلّم</a>
+        <a href="gamification.html" class="navbar__link is-active">الإنجازات</a>
+        <a href="leaderboard.html" class="navbar__link">المتصدرون</a>
+        <a href="gamification.html#certificates" class="navbar__link">الشهادات</a>
+        <a href="index.html#about" class="navbar__link">عن المنصة</a>
+        <a href="index.html#contact" class="navbar__link">تواصل معنا</a>
+      </nav>
+
+      <div class="navbar__actions">
+        <a href="teacher-dashboard.html" class="btn btn--ghost btn--sm">دخول المعلم</a>
+        <a href="login.html" class="btn btn--primary btn--sm">دخول الطالب</a>
+      </div>
+
+      <button class="navbar__toggle" id="navToggle" aria-label="فتح القائمة" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ============================================= -->
+    <!-- PAGE INTRO                                     -->
+    <!-- ============================================= -->
+    <section class="gami-hero">
+      <div class="gami-hero__bg" aria-hidden="true"></div>
+      <div class="container">
+        <span class="eyebrow eyebrow--light reveal">✦ نظام التحفيز الأساسي</span>
+        <h1 class="gami-hero__title reveal">رحلتك مليئة بالمكافآت</h1>
+        <p class="gami-hero__sub reveal">نقاط الخبرة، العملات، المستويات، والشارات — نظام واحد يعمل تلقائيًا خلف كل مهمة ودرس، في أي مادة دراسية.</p>
+      </div>
+    </section>
+
+    <div class="container gami-layout">
+
+      <!-- ============================================= -->
+      <!-- STUDENT PROFILE CARD                           -->
+      <!-- ============================================= -->
+      <section class="profile-card reveal" id="profileCard" aria-label="بطاقة الطالب">
+        <!-- filled in by js/gamification.js -->
+      </section>
+
+      <!-- ============================================= -->
+      <!-- LEVEL SYSTEM                                   -->
+      <!-- ============================================= -->
+      <section class="level-card reveal" id="levelCard" aria-label="نظام المستويات">
+        <!-- filled in by js/gamification.js -->
+      </section>
+
+    </div>
+
+    <!-- ============================================= -->
+    <!-- BADGE GALLERY                                  -->
+    <!-- ============================================= -->
+    <section class="badge-section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title reveal">الشارات</h2>
+            <p class="section-subtitle reveal">شارات جاهزة لأي مادة، وقابلة للتوسّع بلا حدود</p>
+          </div>
+        </div>
+        <div class="badge-grid" id="badgeGrid" aria-live="polite">
+          <!-- badge cards injected here -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================= -->
+    <!-- MY SUBJECTS — PROGRESS ACROSS ALL WORLDS       -->
+    <!-- ============================================= -->
+    <section class="subjects-progress-section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title reveal">مواد دراستي</h2>
+            <p class="section-subtitle reveal">تقدّمك محفوظ تلقائيًا في كل مادة — تابع من حيث توقفت</p>
+          </div>
+        </div>
+        <div class="subjects-progress-grid" id="subjectsProgressGrid" aria-live="polite">
+          <!-- injected by js/gamification.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================= -->
+    <!-- MY CERTIFICATES                                -->
+    <!-- ============================================= -->
+    <section class="certificates-section" id="certificates">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title reveal">شهاداتي</h2>
+            <p class="section-subtitle reveal">كل شهادة إنجاز حصلت عليها بعد إكمال درس بنسبة 100%</p>
+          </div>
+        </div>
+        <div class="certificates-grid" id="certificatesGrid" aria-live="polite">
+          <!-- injected by js/gamification.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================= -->
+    <!-- LEADERBOARD PREVIEW                            -->
+    <!-- ============================================= -->
+    <section class="leaderboard-preview-section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title reveal">المتصدرون</h2>
+            <p class="section-subtitle reveal">أين ترتيبك بين زملائك؟</p>
+          </div>
+          <a href="leaderboard.html" class="btn btn--ghost btn--sm">عرض الترتيب الكامل ←</a>
+        </div>
+        <div class="leaderboard-preview-card reveal" id="leaderboardPreview">
+          <!-- injected by js/leaderboard.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================= -->
+    <!-- DEMO CONTROLS                                  -->
+    <!-- Simulates what a lesson/mission would trigger  -->
+    <!-- by calling the exported engine functions.       -->
+    <!-- ============================================= -->
+    <section class="demo-section">
+      <div class="container">
+        <h2 class="section-title reveal">تجربة النظام</h2>
+        <p class="section-subtitle reveal">أزرار تجريبية لمحاكاة ما ستستدعيه أي مهمة أو درس تلقائيًا من هذا النظام</p>
+
+        <div class="demo-grid reveal">
+          <button type="button" class="demo-btn has-ripple" data-demo="mission">
+            <span>🎯</span> إكمال مهمة <small>+20 XP</small>
+          </button>
+          <button type="button" class="demo-btn has-ripple" data-demo="lesson">
+            <span>📘</span> إكمال درس <small>+60 XP</small>
+          </button>
+          <button type="button" class="demo-btn has-ripple" data-demo="quiz">
+            <span>💯</span> اختبار بعلامة كاملة <small>+40 XP + شارة</small>
+          </button>
+          <button type="button" class="demo-btn has-ripple" data-demo="login">
+            <span>🔥</span> تسجيل دخول يومي <small>+10 XP</small>
+          </button>
+          <button type="button" class="demo-btn has-ripple" data-demo="coins">
+            <span>🪙</span> مكافأة عملات <small>+25 عملة</small>
+          </button>
+          <button type="button" class="demo-btn has-ripple" data-demo="badge">
+            <span>🏅</span> فتح شارة عشوائية
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================= -->
+  <!-- ACHIEVEMENT POPUP LAYER                        -->
+  <!-- One popup shown at a time; the engine queues     -->
+  <!-- multiple achievements and displays them in turn.  -->
+  <!-- ============================================= -->
+  <div class="achv-popup-layer" id="achvPopupLayer" aria-live="polite"></div>
+
+  <!-- ============================================= -->
+  <!-- LEVEL UP OVERLAY                               -->
+  <!-- Distinct from the achievement popups — a bigger-->
+  <!-- celebration reserved for level-up moments only. -->
+  <!-- ============================================= -->
+  <div class="level-up-overlay" id="levelUpOverlay" aria-hidden="true">
+    <div class="level-up-card">
+      <div class="level-up-card__confetti" id="levelUpConfetti" aria-hidden="true"></div>
+      <span class="level-up-card__icon">🎉</span>
+      <h2>ترقية مستوى!</h2>
+      <p>أنت الآن في المستوى <strong id="levelUpNewLevel">5</strong></p>
+      <button type="button" class="btn btn--primary btn--lg has-ripple" id="levelUpCloseBtn">رائع! ← متابعة</button>
+    </div>
+  </div>
+
+  <!-- ============================================= -->
+  <!-- FOOTER (identical component to other pages)    -->
+  <!-- ============================================= -->
+  <footer class="footer" id="contact">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <span class="navbar__logo" aria-hidden="true">
+          <img src="assets/images/logo/logo-icon-64.png" alt="" class="navbar__logo-img" width="30" height="30" />
+        </span>
+        <span class="navbar__title navbar__title--footer">EduVerse</span>
+      </div>
+
+      <nav class="footer__links">
+        <a href="index.html#top">الرئيسية</a>
+        <a href="learning-worlds.html">عوالم التعلّم</a>
+        <a href="gamification.html">الإنجازات</a>
+        <a href="index.html#login">تسجيل الدخول</a>
+      </nav>
+
+      <div class="footer__contact">
+        <p>تواصل معنا: info@eduverse.app</p>
+        <p>© 2026 EduVerse. جميع الحقوق محفوظة.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- PWA: offline app-shell caching -->
+  <script src="js/pwa.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/progress.js" defer></script>
+  <script src="js/gamification.js" defer></script>
+  <script src="js/leaderboard.js" defer></script>
+  <!-- EduBot AI companion -->
+  <script src="js/edubot.js" defer></script>
+</body>
+</html>

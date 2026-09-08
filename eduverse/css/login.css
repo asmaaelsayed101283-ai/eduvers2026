@@ -1,0 +1,121 @@
+/* =================================================================
+   EDUVERSE — LOGIN PAGE (login.html)
+   Same visual language as the teacher dashboard's own login card
+   (css/teacher-dashboard.css .teacher-login) but scoped under its
+   own class names so neither page can affect the other.
+   ================================================================= */
+
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.auth-page__bg {
+  position: absolute;
+  inset: 0;
+  background: var(--grad-hero);
+  z-index: -1;
+}
+.auth-page__bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.18), transparent 40%),
+              radial-gradient(circle at 85% 80%, rgba(255,255,255,0.14), transparent 45%);
+}
+
+.auth-card {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  background: var(--card-bg);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 34px 30px;
+  text-align: center;
+}
+.auth-card__brand { display: inline-block; margin-bottom: 18px; }
+.auth-card__logo { height: 42px; object-fit: contain; }
+
+.auth-card__title { font-size: 1.4rem; margin-bottom: 6px; }
+.auth-card__sub { color: var(--ink-soft); font-size: 0.9rem; margin-bottom: 20px; }
+
+.auth-role-toggle {
+  display: flex;
+  gap: 6px;
+  background: var(--bg-soft);
+  padding: 5px;
+  border-radius: 999px;
+  margin-bottom: 22px;
+}
+.auth-role-toggle__btn {
+  flex: 1;
+  padding: 9px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.auth-role-toggle__btn.is-active {
+  background: var(--card-bg);
+  color: var(--blue);
+  box-shadow: var(--shadow-sm);
+}
+
+.auth-form { display: flex; flex-direction: column; gap: 14px; text-align: start; }
+.auth-form .td-field input,
+.auth-form .td-field select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border-soft);
+  font-family: var(--font-body);
+  font-size: 1rem; /* was 0.92rem — under 16px triggers mobile auto-zoom on focus */
+  background: var(--bg-soft);
+}
+.auth-form .td-field span { display: block; font-size: 0.82rem; font-weight: 700; color: var(--ink-soft); margin-bottom: 6px; }
+
+.auth-avatar-picker {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.auth-avatar-picker__opt {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--bg-soft);
+  border: 2px solid transparent;
+  font-size: 1.3rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.auth-avatar-picker__opt.is-active {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 4px rgba(58,123,255,0.18), 0 0 14px rgba(58,123,255,0.35);
+}
+
+.auth-form__submit { width: 100%; text-align: center; margin-top: 4px; }
+
+.auth-card__note {
+  font-size: 0.76rem;
+  color: var(--ink-soft);
+  margin-top: 18px;
+  opacity: 0.85;
+}
+.auth-card__back {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: var(--blue);
+  font-weight: 700;
+}
+
+@media (max-width: 480px) {
+  .auth-card { padding: 26px 20px; }
+}

@@ -1,0 +1,328 @@
+/* =================================================================
+   EDUVERSE — LEARNING WORLDS PAGE STYLESHEET
+   Builds on the shared tokens/components in css/style.css
+   (colors, fonts, .btn, .navbar, .footer, .reveal, .container).
+   This file only adds what is specific to this page:
+   1. Worlds hero banner
+   2. World card component (+ per-world color theming)
+   3. Locked-world state
+   4. "Add a new world" expandable placeholder
+   5. Portal transition overlay
+   ================================================================= */
+
+/* -----------------------------------------------------------------
+   1. WORLDS HERO BANNER
+   ----------------------------------------------------------------- */
+.worlds-hero {
+  position: relative;
+  padding: 150px 0 100px;
+  overflow: hidden;
+  text-align: center;
+}
+.worlds-hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--grad-hero);
+  background-size: 220% 220%;
+  animation: heroDrift 16s ease-in-out infinite;
+}
+.worlds-hero__inner { display: flex; flex-direction: column; align-items: center; }
+.worlds-hero__title {
+  font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+  color: #fff;
+  margin-bottom: 14px;
+}
+.worlds-hero__sub {
+  color: rgba(255,255,255,0.88);
+  max-width: 620px;
+  font-size: 1.08rem;
+}
+
+/* -----------------------------------------------------------------
+   2. WORLDS GRID + WORLD CARD
+   ----------------------------------------------------------------- */
+.worlds { padding: 72px 0 100px; background: var(--bg-soft); }
+
+.worlds__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.world-card {
+  --w1: var(--blue);
+  --w2: var(--purple);
+  background: var(--card-bg);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-soft);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  cursor: pointer; /* whole card is a click target now, not just the button */
+}
+.world-card:hover {
+  transform: translateY(-10px);
+  box-shadow: var(--shadow-lg);
+}
+.world-card--locked { cursor: pointer; } /* still clickable — triggers the shake + hint */
+.world-card--add { cursor: default; }
+/* The inner button no longer needs its own pointer cursor logic beyond
+   the default; keep it a real, focusable, keyboard-operable button. */
+.world-card__start { cursor: pointer; }
+
+/* --- Illustration area: gradient "world" backdrop with floating theme icons --- */
+.world-card__art {
+  position: relative;
+  height: 168px;
+  background: linear-gradient(135deg, var(--w1), var(--w2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.world-card__shape {
+  position: absolute;
+  font-size: 1.6rem;
+  opacity: 0.55;
+  animation: floaty 4s ease-in-out infinite;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.12));
+}
+
+.world-card__icon {
+  position: relative;
+  z-index: 2;
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.22);
+  animation: iconPulse 2.6s ease-in-out infinite;
+}
+
+.world-card__difficulty {
+  position: absolute;
+  top: 14px;
+  inset-inline-start: 14px;
+  background: rgba(255,255,255,0.9);
+  color: var(--ink);
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 5px 12px;
+  border-radius: 999px;
+  z-index: 3;
+}
+
+/* --- Body --- */
+.world-card__body {
+  padding: 22px 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
+}
+
+.world-card__name { font-size: 1.2rem; }
+.world-card__desc { color: var(--ink-soft); font-size: 0.92rem; }
+
+.world-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+.world-card__meta span { display: inline-flex; align-items: center; gap: 4px; }
+
+.world-card__progress-label {
+  display: flex; justify-content: space-between;
+  font-size: 0.82rem; color: var(--ink-soft); margin-bottom: 4px;
+}
+.world-card__bar { height: 8px; border-radius: 6px; background: var(--border-soft); overflow: hidden; }
+.world-card__bar-fill {
+  display: block; height: 100%; border-radius: 6px;
+  background: linear-gradient(90deg, var(--w1), var(--w2));
+  animation: fillIn 1.2s ease forwards;
+}
+
+.world-card__start {
+  margin-top: auto;
+  width: 100%;
+  background: linear-gradient(120deg, var(--w1), var(--w2));
+  color: #fff;
+  padding: 13px;
+  border-radius: 999px;
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+}
+.world-card__start:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); filter: brightness(1.05); }
+
+/* --- Locked state --- */
+.world-card--locked .world-card__art { filter: grayscale(0.35) brightness(0.85); }
+.world-card--locked .world-card__icon { filter: grayscale(0.5); }
+
+.world-card__lock-badge {
+  position: absolute;
+  top: 14px;
+  inset-inline-end: 14px;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: rgba(28,27,51,0.55);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.95rem;
+  z-index: 3;
+}
+
+.world-card__start--locked {
+  background: var(--border-soft);
+  color: var(--ink-soft);
+  cursor: not-allowed;
+}
+.world-card__start--locked:hover { transform: none; box-shadow: none; filter: none; }
+
+.world-card--locked.is-shaking .world-card__art,
+.world-card--locked.is-shaking .world-card__body {
+  animation: shake 0.4s ease;
+}
+
+.world-card__hint {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  text-align: center;
+  min-height: 16px;
+}
+
+/* --- "Add a new world" expandable placeholder card --- */
+.world-card--add {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+  padding: 40px 24px;
+  background: transparent;
+  border: 2px dashed var(--border-soft);
+  box-shadow: none;
+}
+.world-card--add:hover {
+  border-color: var(--purple);
+  transform: translateY(-6px);
+}
+.world-card--add-icon {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem;
+  background: rgba(139, 92, 246, 0.1);
+  color: var(--purple);
+}
+.world-card--add h3 { font-size: 1.05rem; }
+.world-card--add p { color: var(--ink-soft); font-size: 0.88rem; max-width: 220px; }
+
+/* -----------------------------------------------------------------
+   3. PORTAL TRANSITION OVERLAY
+   Plays when a student starts an unlocked adventure — a burst of the
+   world's own colors expands to fill the screen, giving the feeling
+   of stepping through a portal into that subject's world.
+   ----------------------------------------------------------------- */
+.portal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.portal-overlay.is-active { pointer-events: auto; opacity: 1; }
+
+.portal-overlay__burst {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--pw1, var(--blue)), var(--pw2, var(--purple)));
+  transform: scale(0);
+}
+.portal-overlay.is-active .portal-overlay__burst {
+  animation: portalBurst 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.portal-overlay__content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  color: #fff;
+  opacity: 0;
+}
+.portal-overlay.is-active .portal-overlay__content {
+  animation: portalContentIn 0.6s ease 0.5s forwards;
+}
+
+.portal-overlay__icon {
+  font-size: 3rem;
+  animation: iconPulse 1.4s ease-in-out infinite;
+}
+.portal-overlay__text { font-size: 1.15rem; font-weight: 700; }
+
+.portal-overlay__dots { display: flex; gap: 6px; }
+.portal-overlay__dots span {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #fff;
+  opacity: 0.4;
+  animation: dotBlink 1.2s ease-in-out infinite;
+}
+.portal-overlay__dots span:nth-child(2) { animation-delay: 0.2s; }
+.portal-overlay__dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes portalBurst {
+  0% { transform: scale(0); }
+  100% { transform: scale(60); }
+}
+@keyframes portalContentIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes dotBlink {
+  0%, 100% { opacity: 0.3; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-4px); }
+}
+@keyframes iconPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+/* -----------------------------------------------------------------
+   4. RESPONSIVE
+   ----------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .worlds-hero { padding: 130px 0 80px; }
+  .worlds__grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .worlds__grid { grid-template-columns: 1fr; }
+  .world-card__art { height: 140px; }
+  .portal-overlay__icon { font-size: 2.4rem; }
+}

@@ -1,0 +1,802 @@
+/* =================================================================
+   EDUVERSE — TEACHER DASHBOARD STYLESHEET
+   Builds on css/style.css (tokens, buttons, .has-ripple/.ripple).
+   Sections:
+   1. Shared form field styles
+   2. Teacher Login view
+   3. Dashboard shell (sidebar + main)
+   4. Stat cards + activity list (Home panel)
+   5. Tables (Subjects / Units / Lessons panels)
+   6. Modal (Add/Edit forms)
+   7. File upload dropzones
+   8. Mission settings editor
+   9. Game toggle switches
+   10. Toast
+   11. Responsive
+   ================================================================= */
+
+.td-body { background: var(--bg-soft); }
+
+/* -----------------------------------------------------------------
+   1. SHARED FORM FIELDS
+   ----------------------------------------------------------------- */
+.td-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.td-field input[type="text"],
+.td-field input[type="email"],
+.td-field input[type="password"],
+.td-field input[type="number"],
+.td-field select,
+.td-field textarea {
+  font-family: var(--font-body);
+  /* 16px minimum: below this, iOS/Android browsers auto-zoom the
+     whole viewport when the field receives focus — which looks
+     exactly like "everything got bigger" and is what was actually
+     being reported, not a CSS transform/scale bug. */
+  font-size: 1rem;
+  padding: 11px 14px;
+  border-radius: var(--r-sm);
+  border: 1.5px solid var(--border-soft);
+  background: #fff;
+  color: var(--ink);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.td-field input:focus,
+.td-field select:focus,
+.td-field textarea:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(58,123,255,0.14);
+}
+.td-field textarea { resize: vertical; min-height: 80px; }
+
+.td-field--inline {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  margin: 18px 0 20px;
+}
+.td-field--inline select { min-width: 220px; }
+
+.td-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.td-swatches { display: flex; gap: 10px; flex-wrap: wrap; }
+.td-swatch {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  cursor: pointer;
+  border: 3px solid transparent;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.td-swatch:hover { box-shadow: 0 0 0 3px rgba(58,123,255,0.2); }
+.td-swatch.is-selected { border-color: var(--ink); box-shadow: 0 0 0 3px rgba(58,123,255,0.25); }
+
+.td-emoji-picker { display: flex; gap: 8px; flex-wrap: wrap; }
+.td-emoji-btn {
+  width: 42px; height: 42px;
+  border-radius: 12px;
+  border: 2px solid var(--border-soft);
+  background: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.td-emoji-btn:hover { transform: translateY(-2px); }
+.td-emoji-btn.is-selected { border-color: var(--purple); background: rgba(139,92,246,0.08); }
+
+.td-upload-preview {
+  width: 100%;
+  min-height: 90px;
+  border: 2px dashed var(--border-soft);
+  border-radius: var(--r-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+  overflow: hidden;
+  background: #fff;
+}
+.td-upload-preview img { width: 100%; height: 100%; object-fit: cover; }
+
+.td-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.td-form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
+.td-form-actions .btn { flex: 0 0 auto; }
+@media (max-width: 520px) {
+  .td-form-actions { flex-direction: column-reverse; }
+  .td-form-actions .btn { width: 100%; }
+}
+
+/* -----------------------------------------------------------------
+   2. TEACHER LOGIN VIEW
+   ----------------------------------------------------------------- */
+.teacher-login {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  overflow: hidden;
+}
+.teacher-login__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--grad-hero);
+  background-size: 200% 200%;
+  animation: heroDrift 16s ease-in-out infinite;
+}
+
+.teacher-login__card {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 40px 34px;
+  text-align: center;
+}
+.teacher-login__brand {
+  display: inline-flex;
+  justify-content: center;
+  margin-bottom: 22px;
+}
+.teacher-login__logo {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-md);
+}
+.teacher-login__title { font-size: 1.4rem; margin-bottom: 6px; }
+.teacher-login__sub { color: var(--ink-soft); font-size: 0.92rem; margin-bottom: 26px; }
+
+.teacher-login__form { display: flex; flex-direction: column; gap: 16px; text-align: start; }
+.teacher-login__row { display: flex; justify-content: space-between; align-items: center; }
+.teacher-login__forgot { font-size: 0.82rem; color: var(--blue); font-weight: 700; }
+.teacher-login__submit { width: 100%; margin-top: 4px; }
+
+.teacher-login__note {
+  margin-top: 20px;
+  font-size: 0.78rem;
+  color: var(--orange);
+  background: rgba(255,159,69,0.1);
+  padding: 8px 12px;
+  border-radius: var(--r-sm);
+}
+.teacher-login__back { display: inline-block; margin-top: 14px; font-size: 0.85rem; color: var(--ink-soft); font-weight: 600; }
+.teacher-login__back:hover { color: var(--blue); }
+
+/* -----------------------------------------------------------------
+   3. DASHBOARD SHELL
+   ----------------------------------------------------------------- */
+.td-shell { display: flex; min-height: 100vh; }
+
+.td-sidebar {
+  width: 250px;
+  flex-shrink: 0;
+  background: linear-gradient(180deg, #211D3D, #2E2758);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 22px 16px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+.td-sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px 26px;
+}
+.td-sidebar__brand .navbar__title { color: #fff; }
+
+.td-nav { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.td-nav__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--r-sm);
+  color: rgba(255,255,255,0.78);
+  font-weight: 700;
+  font-size: 0.92rem;
+  text-align: start;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.td-nav__item:hover { background: rgba(255,255,255,0.08); color: #fff; }
+.td-nav__item.is-active {
+  background: linear-gradient(120deg, rgba(58,123,255,0.35), rgba(139,92,246,0.35));
+  color: #fff;
+}
+
+.td-sidebar__exit {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 14px;
+  color: rgba(255,255,255,0.65);
+  font-weight: 700;
+  font-size: 0.88rem;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  margin-top: 10px;
+  padding-top: 18px;
+}
+.td-sidebar__exit:hover { color: #fff; }
+
+.td-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+
+.td-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 32px;
+  background: #fff;
+  border-bottom: 1px solid var(--border-soft);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+.td-topbar__title { font-size: 1.3rem; }
+.td-topbar__teacher {
+  display: flex; align-items: center; gap: 10px;
+  font-weight: 700; font-size: 0.9rem; color: var(--ink-soft);
+}
+.td-topbar__avatar {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: var(--grad-primary);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+}
+
+.td-content { padding: 28px 32px 60px; max-width: 1180px; }
+
+.td-panel { display: none; }
+.td-panel.is-active { display: block; animation: pageIn 0.4s ease both; }
+
+.td-card {
+  background: #fff;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-sm);
+  padding: 24px;
+  margin-top: 22px;
+}
+.td-card h2 { font-size: 1.1rem; margin-bottom: 16px; }
+
+.td-panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.td-panel-head h2 { font-size: 1.25rem; margin-bottom: 4px; }
+.td-panel-head p { color: var(--ink-soft); font-size: 0.9rem; }
+
+/* -----------------------------------------------------------------
+   4. STAT CARDS + ACTIVITY LIST (Home panel)
+   ----------------------------------------------------------------- */
+.td-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+.td-stat-card {
+  background: #fff;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-sm);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.td-stat-card__icon {
+  width: 42px; height: 42px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+  background: linear-gradient(135deg, var(--c1, var(--blue)), var(--c2, var(--purple)));
+  color: #fff;
+  margin-bottom: 6px;
+}
+.td-stat-card strong { font-family: var(--font-display); font-size: 1.5rem; }
+.td-stat-card span { color: var(--ink-soft); font-size: 0.82rem; font-weight: 600; }
+.td-stat-card--placeholder strong { color: var(--ink-soft); }
+
+.td-activity-list { display: flex; flex-direction: column; gap: 4px; }
+.td-activity-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 4px;
+  border-bottom: 1px solid var(--border-soft);
+  font-size: 0.9rem;
+}
+.td-activity-item:last-child { border-bottom: none; }
+.td-activity-item__icon { font-size: 1.1rem; }
+.td-activity-item__time { margin-inline-start: auto; color: var(--ink-soft); font-size: 0.78rem; }
+.td-activity-empty { color: var(--ink-soft); font-size: 0.88rem; padding: 10px 4px; }
+
+/* -----------------------------------------------------------------
+   5. TABLES
+   ----------------------------------------------------------------- */
+.td-table-wrap {
+  margin-top: 18px;
+  background: #fff;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.td-table { width: 100%; border-collapse: collapse; }
+.td-table th {
+  text-align: start;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  background: var(--bg-soft);
+  padding: 12px 18px;
+  font-weight: 700;
+}
+.td-table td {
+  padding: 14px 18px;
+  border-top: 1px solid var(--border-soft);
+  font-size: 0.9rem;
+  vertical-align: middle;
+}
+.td-table tr:hover td { background: rgba(58,123,255,0.03); }
+
+.td-table__name { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+.td-table__icon {
+  width: 34px; height: 34px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  color: #fff;
+  flex-shrink: 0;
+}
+.td-color-dot { width: 22px; height: 22px; border-radius: 50%; display: inline-block; }
+.td-difficulty-tag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--bg-soft);
+  color: var(--ink-soft);
+}
+
+.td-status-tag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.td-status-tag--draft { background: rgba(234, 179, 8, 0.15); color: #92650a; }
+.td-status-tag--published { background: rgba(34, 197, 94, 0.15); color: #15803d; }
+
+.td-row-actions { display: flex; gap: 8px; justify-content: flex-end; }
+.td-row-btn {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--border-soft);
+  background: #fff;
+  font-size: 0.9rem;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.td-row-btn:hover { transform: translateY(-2px); }
+.td-row-btn--danger:hover { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.3); }
+
+.td-empty-row td { text-align: center; color: var(--ink-soft); padding: 26px; }
+
+/* -----------------------------------------------------------------
+   6. MODAL
+   ----------------------------------------------------------------- */
+.td-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.td-modal[hidden] { display: none; }
+.td-modal__backdrop { position: absolute; inset: 0; background: rgba(28,27,51,0.5); }
+.td-modal__card {
+  position: relative;
+  background: #fff;
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 30px;
+  width: 100%;
+  max-width: 560px;
+  max-height: 88vh;
+  overflow-y: auto;
+  animation: modalIn 0.3s cubic-bezier(0.22,1,0.36,1) both;
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.td-modal__close {
+  position: absolute;
+  top: 16px; inset-inline-end: 16px;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--bg-soft);
+  font-size: 1rem;
+}
+.td-modal__title { font-size: 1.2rem; margin-bottom: 18px; }
+.td-modal__body { display: flex; flex-direction: column; gap: 16px; }
+/* Wider variant for content-heavy forms (the Lesson editor) — added via
+   JS as a modifier class, default modal size is untouched everywhere else. */
+.td-modal__card--wide { max-width: 820px; }
+
+/* -----------------------------------------------------------------
+   6b. MODAL SECTION GROUPING (used inside the Lesson editor to keep a
+   long, rich form scannable — purely organizational, same tokens as
+   everything else, no new colors introduced).
+   ----------------------------------------------------------------- */
+.td-modal-section {
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-md);
+  padding: 16px 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.td-modal-section__title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.td-modal-section__hint { font-size: 0.78rem; color: var(--ink-soft); margin-top: -8px; }
+
+/* -----------------------------------------------------------------
+   6c. GENERIC REPEATER (Objectives / Vocabulary / Quiz questions)
+   Same visual language as .mission-editor-row (soft background block,
+   inline inputs, a remove button) generalized so any list of editable
+   rows can reuse it without a fixed column count.
+   ----------------------------------------------------------------- */
+.td-repeater { display: flex; flex-direction: column; gap: 10px; }
+.td-repeater-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--bg-soft);
+  border-radius: var(--r-sm);
+  padding: 12px;
+}
+.td-repeater-row__fields {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.td-repeater-row__fields--grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.td-repeater-row input[type="text"],
+.td-repeater-row textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border-soft);
+  font-size: 1rem; /* was 0.85rem — under 16px triggers mobile auto-zoom on focus */
+  font-family: inherit;
+  box-sizing: border-box;
+}
+.td-repeater-row textarea { resize: vertical; min-height: 44px; }
+.td-repeater-row__options { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.td-repeater-row__option { display: flex; align-items: center; gap: 6px; font-size: 0.82rem; }
+.td-repeater-row__option input[type="text"] { flex: 1; }
+.td-repeater-row__remove {
+  width: 32px; height: 32px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  border: 1px solid var(--border-soft);
+  background: #fff;
+}
+.td-repeater-row__remove:hover { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.3); }
+.td-repeater__add { align-self: flex-start; }
+.td-repeater__empty { color: var(--ink-soft); font-size: 0.82rem; padding: 4px 2px; }
+
+/* -----------------------------------------------------------------
+   6d. GAME PICKER (compact checkbox grid reused inside Lesson editor)
+   ----------------------------------------------------------------- */
+.td-game-picker { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.td-game-picker__opt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border-soft);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.td-game-picker__opt input { margin: 0; }
+.td-game-picker__opt:has(input:checked) { border-color: var(--blue); background: rgba(58,123,255,0.06); }
+/* JS-driven fallback for browsers without :has() support — app.js/
+   teacher-dashboard.js toggles this class directly on change. */
+.td-game-picker__opt.is-checked { border-color: var(--blue); background: rgba(58,123,255,0.06); }
+
+/* -----------------------------------------------------------------
+   6e. TEACHER PROFILE PANEL
+   ----------------------------------------------------------------- */
+.td-profile-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 22px;
+}
+.td-profile-avatar {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.1rem;
+  background: var(--grad-primary);
+  color: #fff;
+  flex-shrink: 0;
+}
+.td-profile-header__name { font-size: 1.15rem; font-weight: 800; }
+.td-profile-header__role { color: var(--ink-soft); font-size: 0.85rem; }
+
+/* -----------------------------------------------------------------
+   6f. GAME TOGGLE AVAILABILITY HINT (Game Settings panel)
+   ----------------------------------------------------------------- */
+.game-toggle--unavailable { opacity: 0.55; }
+.game-toggle__hint { font-weight: 400; font-size: 0.75rem; color: var(--ink-soft); }
+
+/* -----------------------------------------------------------------
+   6g. QUIZ CATEGORY SELECT (inside the quiz repeater row)
+   ----------------------------------------------------------------- */
+.td-repeater-row__category { display: flex; flex-direction: column; gap: 4px; font-size: 0.78rem; color: var(--ink-soft); }
+.td-repeater-row__category select {
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border-soft);
+  font-size: 1rem; /* was 0.82rem — under 16px triggers mobile auto-zoom on focus */
+  font-family: inherit;
+}
+
+/* -----------------------------------------------------------------
+   6h. DIAGRAM LABEL EDITOR (click-to-place pins on the lesson image)
+   ----------------------------------------------------------------- */
+.label-diagram-editor__image,
+.label-diagram__image {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  aspect-ratio: 4 / 3;
+  background-size: cover;
+  background-position: center;
+  border-radius: var(--r-md);
+  cursor: crosshair;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+.label-diagram__pin {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: #fff;
+  border: 2px solid #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800;
+  font-size: 0.8rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  pointer-events: none;
+}
+
+/* -----------------------------------------------------------------
+   6i. SMART LESSON GENERATOR SECTION
+   ----------------------------------------------------------------- */
+.td-generator-section {
+  background: linear-gradient(135deg, rgba(139,92,246,0.08), rgba(58,123,255,0.08));
+  border-color: rgba(139,92,246,0.3);
+}
+
+/* -----------------------------------------------------------------
+   7. FILE UPLOAD DROPZONES
+   ----------------------------------------------------------------- */
+.upload-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+.upload-dropzone {
+  position: relative;
+  background: #fff;
+  border: 2px dashed var(--border-soft);
+  border-radius: var(--r-md);
+  padding: 26px 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease;
+}
+.upload-dropzone:hover { transform: translateY(-4px); border-color: var(--blue); }
+.upload-dropzone.is-dragover { border-color: var(--purple); background: rgba(139,92,246,0.06); }
+.upload-dropzone input[type="file"] {
+  position: absolute; inset: 0; opacity: 0; cursor: pointer;
+}
+.upload-dropzone__icon { font-size: 1.8rem; display: block; margin-bottom: 8px; }
+.upload-dropzone__label { font-weight: 700; font-size: 0.9rem; }
+.upload-dropzone__hint { color: var(--ink-soft); font-size: 0.74rem; margin-top: 4px; }
+
+.upload-file-list { display: flex; flex-direction: column; gap: 8px; }
+.upload-file-list__empty { color: var(--ink-soft); font-size: 0.88rem; }
+.upload-file-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-sm);
+  font-size: 0.88rem;
+}
+.upload-file-item__icon { font-size: 1.2rem; }
+.upload-file-item__meta { color: var(--ink-soft); font-size: 0.76rem; margin-inline-start: auto; }
+
+/* -----------------------------------------------------------------
+   8. MISSION SETTINGS EDITOR
+   ----------------------------------------------------------------- */
+.mission-settings__toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+.mission-settings__count-controls { display: flex; gap: 8px; }
+
+.missions-editor-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; }
+
+.mission-editor-row {
+  display: grid;
+  grid-template-columns: auto 1fr repeat(3, 90px) auto;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-soft);
+  border-radius: var(--r-sm);
+  padding: 14px;
+}
+.mission-editor-row__order { display: flex; flex-direction: column; gap: 2px; }
+.mission-editor-row__order button {
+  width: 24px; height: 20px;
+  border-radius: 4px;
+  background: #fff;
+  border: 1px solid var(--border-soft);
+  font-size: 0.7rem;
+}
+.mission-editor-row input[type="number"],
+.mission-editor-row input[type="text"] {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border-soft);
+  font-size: 1rem; /* was 0.85rem — under 16px triggers mobile auto-zoom on focus */
+}
+.mission-editor-row__icon-btn {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border-soft);
+  background: #fff;
+  font-size: 1.2rem;
+}
+.mission-editor-row__remove {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--border-soft);
+  background: #fff;
+}
+
+/* -----------------------------------------------------------------
+   9. GAME TOGGLE SWITCHES
+   ----------------------------------------------------------------- */
+.game-toggles-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-bottom: 22px;
+}
+.game-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-sm);
+  background: var(--bg-soft);
+}
+.game-toggle__info { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 0.9rem; }
+.game-toggle__icon { font-size: 1.2rem; }
+
+.toggle-switch { position: relative; width: 46px; height: 26px; flex-shrink: 0; }
+.toggle-switch input { position: absolute; inset: 0; opacity: 0; cursor: pointer; margin: 0; }
+.toggle-switch__track {
+  position: absolute; inset: 0;
+  background: var(--border-soft);
+  border-radius: 999px;
+  transition: background 0.25s ease;
+}
+.toggle-switch__track::after {
+  content: "";
+  position: absolute;
+  top: 3px; inset-inline-start: 3px;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  transition: transform 0.25s ease;
+}
+.toggle-switch input:checked ~ .toggle-switch__track { background: var(--grad-primary); }
+[dir="rtl"] .toggle-switch input:checked ~ .toggle-switch__track::after { transform: translateX(-20px); }
+
+/* -----------------------------------------------------------------
+   10. TOAST
+   ----------------------------------------------------------------- */
+.td-toast {
+  position: fixed;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--ink);
+  color: #fff;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 1000;
+}
+.td-toast.is-visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* -----------------------------------------------------------------
+   11. RESPONSIVE
+   ----------------------------------------------------------------- */
+@media (max-width: 1100px) {
+  .td-stats-grid { grid-template-columns: repeat(3, 1fr); }
+  .upload-grid { grid-template-columns: repeat(3, 1fr); }
+  .game-toggles-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 900px) {
+  .td-shell { flex-direction: column; }
+  .td-sidebar { width: 100%; height: auto; position: static; flex-direction: row; flex-wrap: wrap; align-items: center; }
+  .td-sidebar__brand { padding: 6px 8px; }
+  .td-nav { flex-direction: row; flex-wrap: wrap; }
+  .td-sidebar__exit { margin-inline-start: auto; border-top: none; }
+  .td-form-grid { grid-template-columns: 1fr; }
+  .mission-editor-row { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .td-content { padding: 20px 16px 50px; }
+  .td-stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .upload-grid { grid-template-columns: repeat(2, 1fr); }
+  .td-topbar { padding: 16px 18px; }
+}
